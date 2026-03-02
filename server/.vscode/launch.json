@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Debug Server",
+            "type": "node",
+            "request": "launch",
+            "skipFiles": ["<node_internals>/**"],
+            "program": "${workspaceFolder}/db-connection.cjs",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
