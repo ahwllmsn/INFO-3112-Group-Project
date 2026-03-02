@@ -1,0 +1,23 @@
+{
+  "name": "info-3112-server",
+  "version": "1.0.0",
+  "description": "Server Folder for INFO-3112 Group Project Dating Applicaiton",
+  "homepage": "https://github.com/ahwllmsn/INFO-3112-Group-Project#readme",
+  "bugs": {
+    "url": "https://github.com/ahwllmsn/INFO-3112-Group-Project/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahwllmsn/INFO-3112-Group-Project.git"
+  },
+  "license": "ISC",
+  "author": "Vision Executors",
+  "type": "module",
+  "main": "sever.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "mongodb": "^7.1.0"
+  }
+}
