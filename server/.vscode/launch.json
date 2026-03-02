@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch",
             "skipFiles": ["<node_internals>/**"],
-            "program": "${workspaceFolder}/db-connection.cjs",
+            "program": "${workspaceFolder}/server.js",
             "envFile": "${workspaceFolder}/.env"
         }
     ]
