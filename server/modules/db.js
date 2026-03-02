@@ -12,6 +12,14 @@ const initDatabase = async (connectionString) => {
     }
 }
 
+const findDocument = (context, database, collection, criteria, projection = { _id: 0 }) => {
+    return context.db(database).collection(collection).findOne(criteria, { projection });
+}
+
+const findDocuments = (context, database, collection, criteria, projection = { _id: 0 }) => {
+    return context.db(database).collection(collection).find(criteria, { projection }).toArray();
+}
+
 const insertDocument = (context, database, collection, document) => {
     return context.db(database).collection(collection).insertOne(document);
 }
@@ -25,6 +33,8 @@ const deleteDocument = (context, database, collection, document) => {
 
 
 export { 
+    findDocument,
+    findDocuments,
     initDatabase,
     insertDocument,
     deleteDocument
