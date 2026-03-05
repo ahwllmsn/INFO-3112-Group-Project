@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { retrieveOneUser } from "./data";
 
 const app = express();
 
@@ -18,10 +19,35 @@ app.use((req, _res, next) => {
     next();
 });
 
+
+
 // To-do: define endpoints.
-app.get('/test', (_req, res) => {
-    res.sendFile("package.json", {root: '.'});
+app.get('/get-profile', async (req, res) => { // Still working out the kinks on this.
+    try {
+        let request_body = req.body;
+        let user_email = request_body.email;
+        let user = await retrieveOneUser(user_email);
+        response.json(user);
+    } catch (e) {
+        console.log(e);
+        response.sendStatus(500);
+    }
 });
+
+
+// app.post('/change-this-later', (req, res) => {
+//     try {
+//         // let body = req.body;
+//         console.log("body:", req.body);
+//         res.sendStatus(200);
+//         // console.log(res);
+//     } catch (e) {
+//         console.error(e);
+//         res.sendStatus(500);
+//     }
+// });
+
+
 
 const startServer = (port) => {
     app.listen(port, console.warn(`Listening on port ${port}`));
