@@ -8,6 +8,9 @@ app.use(express.json());
 app.use(cors());
 
 // To-do: define endpoints.
+app.get('/test', (_req, res) => {
+    res.sendFile("package.json", {root: '.'});
+});
 
 const startServer = (port) => {
     app.listen(port, console.warn(`Listening on port ${port}`));
