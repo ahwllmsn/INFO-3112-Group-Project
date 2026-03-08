@@ -2,18 +2,102 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/lookingForLoveIcon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LookingForLove</title>
+    <title>DevMeet | Login & Signup</title>
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <p>INFO-3112 Dating App index.html</p>
+    <main class="page">
+      <section class="hero-panel">
+        <div class="hero-content">
+          <span class="badge">Developer Dating Platform</span>
+          <h1>DevMeet</h1>
+          <p class="hero-text">
+            Meet developers who match your vibe, your values, and your tech stack.
+          </p>
 
-    <!-- The default example build used dynamic HTML through JavaScript.
-     Delete those files if you want, but I've just commented those out for now as an example
-     if you guys want to use that! - Alyssa -->
+          <div class="feature-grid">
+            <article class="feature-card">
+              <h3>Build your profile</h3>
+              <p>Show your interests, goals, and favorite technologies.</p>
+            </article>
+            <article class="feature-card">
+              <h3>Find your match</h3>
+              <p>Connect with people who speak your love language and your code language.</p>
+            </article>
+            <article class="feature-card">
+              <h3>Start simple</h3>
+              <p>Create an account in seconds and connect the backend later.</p>
+            </article>
+          </div>
+        </div>
+      </section>
 
-    <!-- <div id="app"></div> -->
-    <!-- <script type="module" src="/src/main.js"></script> --> 
+      <section class="form-panel">
+        <div class="form-shell">
+          <div class="tab-bar" role="tablist" aria-label="Authentication tabs">
+            <button id="loginTab" class="tab active" type="button">Login</button>
+            <button id="signupTab" class="tab" type="button">Sign Up</button>
+          </div>
+
+          <form id="loginForm" class="auth-form active-form" novalidate>
+            <h2>Welcome back</h2>
+            <p class="form-subtitle">Log in to continue exploring developer matches.</p>
+
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" type="email" placeholder="you@example.com" />
+
+            <label for="loginPassword">Password</label>
+            <div class="password-field">
+              <input id="loginPassword" type="password" placeholder="Enter your password" />
+              <button type="button" class="toggle-password" data-target="loginPassword">Show</button>
+            </div>
+
+            <p id="loginMessage" class="message" aria-live="polite"></p>
+
+            <button class="primary-button" type="submit">Log In</button>
+          </form>
+
+          <form id="signupForm" class="auth-form" novalidate>
+            <h2>Create account</h2>
+            <p class="form-subtitle">Join the developer dating community.</p>
+
+            <label for="signupUsername">Username</label>
+            <input id="signupUsername" type="text" placeholder="Choose a username" />
+
+            <label for="signupEmail">Email</label>
+            <input id="signupEmail" type="email" placeholder="you@example.com" />
+
+            <label for="signupPassword">Password</label>
+            <div class="password-field">
+              <input id="signupPassword" type="password" placeholder="Create a password" />
+              <button type="button" class="toggle-password" data-target="signupPassword">Show</button>
+            </div>
+
+            <label for="confirmPassword">Confirm Password</label>
+            <div class="password-field">
+              <input id="confirmPassword" type="password" placeholder="Confirm your password" />
+              <button type="button" class="toggle-password" data-target="confirmPassword">Show</button>
+            </div>
+
+            <section class="password-rules" aria-label="Password rules">
+              <p>Password must include:</p>
+              <ul>
+                <li id="rule-length">At least 8 characters</li>
+                <li id="rule-uppercase">At least 1 uppercase letter</li>
+                <li id="rule-number">At least 1 number</li>
+                <li id="rule-special">At least 1 special character</li>
+              </ul>
+            </section>
+
+            <p id="signupMessage" class="message" aria-live="polite"></p>
+
+            <button class="primary-button" type="submit">Create Account</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./script.js"></script>
   </body>
 </html>
