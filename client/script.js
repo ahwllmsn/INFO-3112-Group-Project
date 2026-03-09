@@ -1,3 +1,5 @@
+import * as api from './src/util/api.js';
+
 const loginTab = document.getElementById('loginTab');
 const signupTab = document.getElementById('signupTab');
 const loginForm = document.getElementById('loginForm');
@@ -107,7 +109,7 @@ signupForm.addEventListener('submit', (event) => {
   // });
 });
 
-loginForm.addEventListener('submit', (event) => {
+loginForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   clearMessages();
 
@@ -123,13 +125,19 @@ loginForm.addEventListener('submit', (event) => {
   loginMessage.className = 'message success';
   loginMessage.textContent = 'Login form is ready for backend connection.';
 
-  // Replace this later with your teammate's API endpoint.
-  // Example:
-  // fetch('http://localhost:9000/api/login', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({ email, password }),
-  // });
+  // Validate login info (email + password) exists in the database.
+  let loginResult = await api.users.validateLogin(email, password);
+  if (loginResult.status == 200) {
+    // Successful login...
+    console.log("Successful login!"); // Temporary
+
+  } else if (loginResult.status == 401) {
+    // No email / password combination found in database...
+    console.log("Incorrect username or password."); // Temporary
+  } else {
+    // Server-side error...
+      console.log("Server-side error."); // Temporary
+  }
 });
 
 showLogin();

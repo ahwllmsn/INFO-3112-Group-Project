@@ -33,7 +33,7 @@ const retrieveOneUserLogin = async (email) => {
         }
 
         context = await db.initDatabase(env.DB_URI);
-        user = await db.findDocument(context, DATABASE_NAME, USER_COLLECTION, {}, projection);
+        user = await db.findDocument(context, DATABASE_NAME, USER_COLLECTION, query, projection);
     } catch (e) {
         console.error(e);
     } finally {
@@ -49,7 +49,7 @@ const retrieveOneUser = async (email) => {
     try {
         const query = {email};
         context = await db.initDatabase(env.DB_URI);
-        user = await db.findDocument(context, DATABASE_NAME, USER_COLLECTION, {});
+        user = await db.findDocument(context, DATABASE_NAME, USER_COLLECTION, query);
     } catch (e) {
         console.error(e);
     } finally {

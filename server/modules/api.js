@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { retrieveOneUser } from "./data";
+import { retrieveOneUser, retrieveOneUserLogin } from "./data.js";
 
 const app = express();
 
@@ -19,35 +19,33 @@ app.use((req, _res, next) => {
     next();
 });
 
-
-
-// To-do: define endpoints.
-app.get('/get-profile', async (req, res) => { // Still working out the kinks on this.
+// Endpoint for client to send email + password and validate that combination exists in the database.
+// It uses POST as it is more secure for sensitive info.
+app.post('/login', async (req, res) => {
     try {
         let request_body = req.body;
         let user_email = request_body.email;
-        let user = await retrieveOneUser(user_email);
-        response.json(user);
+        let user_password = request_body.password;
+        
+        // Get user with the matching email.
+        let user = await retrieveOneUserLogin(user_email); 
+
+        // No matching email in database.
+        if (user == null) {
+            res.sendStatus(401);
+        // Email + password combination does not match login credentials.
+        } else if (user.password == user_password && user.email == user_email) {
+            res.sendStatus(200);
+        // Other login credential related error.
+        } else {
+            res.sendStatus(401);
+        }
+    // Server-side error.
     } catch (e) {
         console.log(e);
         response.sendStatus(500);
     }
-});
-
-
-// app.post('/change-this-later', (req, res) => {
-//     try {
-//         // let body = req.body;
-//         console.log("body:", req.body);
-//         res.sendStatus(200);
-//         // console.log(res);
-//     } catch (e) {
-//         console.error(e);
-//         res.sendStatus(500);
-//     }
-// });
-
-
+}); 
 
 const startServer = (port) => {
     app.listen(port, console.warn(`Listening on port ${port}`));

@@ -9,14 +9,13 @@ const headers = {
 const serverRoute = (route) => `${API_IP}:${API_PORT}/${route}`;
 
 const users = {
-    getProfileInfo: async (email) => {
-        let response = await fetch(serverRoute('get-profile'), {
+    validateLogin: async (email, password) => {
+        let response = await fetch(serverRoute('login'), {
             headers,
-            method: 'GET',
-            body: {email}
+            method: 'POST',
+            body: JSON.stringify({email, password}),
         });
-        let data = await response.json();
-        return data;
+        return response;
     }
 }
 
