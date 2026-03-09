@@ -74,12 +74,12 @@ signupForm.addEventListener('submit', (event) => {
   event.preventDefault();
   clearMessages();
 
-  const username = document.getElementById('signupUsername').value.trim();
+  const firstName = document.getElementById('signupFirstName').value.trim();
   const email = document.getElementById('signupEmail').value.trim();
   const password = signupPassword.value;
   const confirmed = confirmPassword.value;
 
-  if (!username || !email || !password || !confirmed) {
+  if (!firstName || !email || !password || !confirmed) {
     signupMessage.className = 'message error';
     signupMessage.textContent = 'Please fill in all signup fields.';
     return;
