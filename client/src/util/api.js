@@ -27,6 +27,14 @@ const users = {
             body: JSON.stringify({newUser}),
         });
         return response;
+    },
+    createProfile: async (profileInfo) => {
+        let response = await fetch(serverRoute('create-profile'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({profileInfo}),
+        });
+        return response;  
     }
 }
 

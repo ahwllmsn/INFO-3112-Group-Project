@@ -107,7 +107,7 @@ signupForm.addEventListener('submit', async (event) => {
   if (signUpResult.status == 200) {
     // Successful sign up...
     console.log("Successful sign up!"); // Temporary
-    
+
   } else {
     // Server-side error...
     console.log("Server-side error."); // Temporary

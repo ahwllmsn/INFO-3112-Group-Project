@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { addUser, retrieveOneUserLogin } from "./data.js";
+import { addUser, retrieveOneUserLogin, addProfileFields } from "./data.js";
 
 const app = express();
 
@@ -51,6 +51,17 @@ app.post('/sign-up', async (req, res) => {
     try {
         let request_body = req.body;
         await addUser(request_body.newUser);
+        res.sendStatus(200);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+app.post('/create-profile', async (req, res) => {
+    try {
+        let request_body = req.body;
+        await addProfileFields(request_body.profileInfo);
         res.sendStatus(200);
     } catch (e) {
         console.log(e);

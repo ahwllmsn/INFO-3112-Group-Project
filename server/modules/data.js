@@ -3,7 +3,7 @@ import * as db from './db.js';
 
 const DATABASE_NAME = "INFO-3112-Project";
 const USER_COLLECTION = "users";
-const MATCHES_COLLECTIOn = "matches"
+const MATCHES_COLLECTIOn = "matches"; // Placeholder for when we have matches (temporary).
 
 const addUser = async (user) => {
     let context = undefined;
@@ -43,7 +43,7 @@ const retrieveOneUserLogin = async (email) => {
 
 }
 
-const retrieveOneUser = async (email) => {
+const retrieveOneUser = async (email) => { // Has not been used yet.
     let user = undefined;
     let context = undefined;
     try {
@@ -58,7 +58,35 @@ const retrieveOneUser = async (email) => {
     return user;
 }
 
-const retrieveAllUsers = async () => {
+const addProfileFields = async (profileInfo) => {
+    let context = undefined;
+    try {
+        context = await db.initDatabase(env.DB_URI);
+        
+        // First, find the document of that user to add new profile fields to.
+        const email = profileInfo.email;
+        const query = {email};
+        let user = await db.findDocument(context, DATABASE_NAME, USER_COLLECTION, query);
+
+        // Iterate through all keys in new profile, and only save the new ones that the user doesn't already have.
+        let newProfileFields = {};
+        for (const [key, value] of Object.entries(profileInfo)) {
+            if (user[key] == null) {
+                newProfileFields[key] = value;
+            }
+        }
+        
+        // Add new fields to preexisting document.
+        await db.updateDocument(context, DATABASE_NAME, USER_COLLECTION, query, newProfileFields);
+        console.log(`Successfully added ${Object.keys(newProfileFields).length} new fields to [${user.email}]`);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+}
+
+const retrieveAllUsers = async () => { // Has not been used yet.
     let users = [];
     let context = undefined;
     try {
@@ -78,5 +106,6 @@ export {
     addUser,
     retrieveOneUserLogin,
     retrieveOneUser,
-    retrieveAllUsers
+    retrieveAllUsers,
+    addProfileFields
 }

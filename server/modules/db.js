@@ -28,8 +28,9 @@ const deleteDocument = (context, database, collection, document) => {
     return context.db(database).collection(collection).deleteOne(document);
 }
 
-// Alyssa - 03-02-2026:
-// I will add more methods for querying + modification later. I'm just adding in basics for now.
+const updateDocument = (context, database, collection, documentCriteria, newFields) => {
+    return context.db(database).collection(collection).updateOne(documentCriteria, {$set: newFields});
+}
 
 
 export { 
@@ -37,5 +38,6 @@ export {
     findDocuments,
     initDatabase,
     insertDocument,
-    deleteDocument
+    deleteDocument,
+    updateDocument
 };
