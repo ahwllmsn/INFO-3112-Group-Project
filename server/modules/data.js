@@ -58,7 +58,8 @@ const retrieveOneUser = async (email) => { // Has not been used yet.
     return user;
 }
 
-const addProfileFields = async (profileInfo) => {
+const updateProfileFields = async (profileInfo) => {
+    let numFieldsChanged = 0;
     let context = undefined;
     try {
         context = await db.initDatabase(env.DB_URI);
@@ -71,19 +72,20 @@ const addProfileFields = async (profileInfo) => {
         // Iterate through all keys in new profile, and only save the new ones that the user doesn't already have.
         let newProfileFields = {};
         for (const [key, value] of Object.entries(profileInfo)) {
-            if (user[key] == null) {
+            if (user[key] == null || user[key] != profileInfo[key]) {
                 newProfileFields[key] = value;
             }
         }
         
         // Add new fields to preexisting document.
         await db.updateDocument(context, DATABASE_NAME, USER_COLLECTION, query, newProfileFields);
-        console.log(`Successfully added ${Object.keys(newProfileFields).length} new fields to [${user.email}]`);
+        numFieldsChanged = Object.keys(newProfileFields).length;
     } catch (e) {
         console.error(e);
     } finally {
         context?.close();
     }
+    console.log(`Successfully updated ${numFieldsChanged} fields for [${profileInfo.email}]`);
 }
 
 const retrieveAllUsers = async () => { // Has not been used yet.
@@ -107,5 +109,5 @@ export {
     retrieveOneUserLogin,
     retrieveOneUser,
     retrieveAllUsers,
-    addProfileFields
+    updateProfileFields,
 }

@@ -28,6 +28,9 @@ const users = {
         });
         return response;
     },
+    // Note: pass all profile information here (including things that already exist - email, first name, password)
+    // And only the new profile fields will be created (like age, gender, location, looking for love/friendship, etc.)
+    // You must pass the email at the very least because the lookup is done on that field.  - Alyssa
     createProfile: async (profileInfo) => {
         let response = await fetch(serverRoute('create-profile'), {
             headers,
@@ -35,7 +38,15 @@ const users = {
             body: JSON.stringify({profileInfo}),
         });
         return response;  
-    }
+    },
+    editProfile: async (profileInfo) => {
+        let response = await fetch(serverRoute('edit-profile'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({profileInfo}),
+        });
+        return response;  
+    },
 }
 
 const matches = {
