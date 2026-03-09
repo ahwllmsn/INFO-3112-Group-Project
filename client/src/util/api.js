@@ -16,6 +16,17 @@ const users = {
             body: JSON.stringify({email, password}),
         });
         return response;
+    },
+    newSignUp: async (newUser) => {
+        // Add date information for when this account was created.
+        const date = new Date();
+        newUser.account_created = date;
+        let response = await fetch(serverRoute('sign-up'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({newUser}),
+        });
+        return response;
     }
 }
 

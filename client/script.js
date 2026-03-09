@@ -70,7 +70,7 @@ signupPassword.addEventListener('input', () => {
   validatePassword(signupPassword.value);
 });
 
-signupForm.addEventListener('submit', (event) => {
+signupForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   clearMessages();
 
@@ -98,15 +98,21 @@ signupForm.addEventListener('submit', (event) => {
   }
 
   signupMessage.className = 'message success';
-  signupMessage.textContent = 'Signup form is valid and ready for backend connection.';
+  signupMessage.textContent = 'Signup form is valid and ready for backend connection.'; // Temporary, can be changed now.
 
-  // Replace this later with your teammate's API endpoint.
-  // Example:
-  // fetch('http://localhost:9000/api/signup', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({ username, email, password }),
-  // });
+  // Sign-up new user by adding their credentials to the database.
+  const newUser = {firstName, email, password};
+  let signUpResult = await api.users.newSignUp(newUser);
+
+  if (signUpResult.status == 200) {
+    // Successful sign up...
+    console.log("Successful sign up!"); // Temporary
+    
+  } else {
+    // Server-side error...
+    console.log("Server-side error."); // Temporary
+
+  } 
 });
 
 loginForm.addEventListener('submit', async (event) => {
@@ -123,7 +129,7 @@ loginForm.addEventListener('submit', async (event) => {
   }
 
   loginMessage.className = 'message success';
-  loginMessage.textContent = 'Login form is ready for backend connection.';
+  loginMessage.textContent = 'Login form is ready for backend connection.'; // Temporary, can be changed now.
 
   // Validate login info (email + password) exists in the database.
   let loginResult = await api.users.validateLogin(email, password);
@@ -134,9 +140,11 @@ loginForm.addEventListener('submit', async (event) => {
   } else if (loginResult.status == 401) {
     // No email / password combination found in database...
     console.log("Incorrect username or password."); // Temporary
+
   } else {
     // Server-side error...
       console.log("Server-side error."); // Temporary
+
   }
 });
 

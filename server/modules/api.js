@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { retrieveOneUser, retrieveOneUserLogin } from "./data.js";
+import { addUser, retrieveOneUserLogin } from "./data.js";
 
 const app = express();
 
@@ -46,6 +46,17 @@ app.post('/login', async (req, res) => {
         response.sendStatus(500);
     }
 }); 
+
+app.post('/sign-up', async (req, res) => {
+    try {
+        let request_body = req.body;
+        await addUser(request_body.newUser);
+        res.sendStatus(200);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
 
 const startServer = (port) => {
     app.listen(port, console.warn(`Listening on port ${port}`));
