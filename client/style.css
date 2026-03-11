@@ -261,3 +261,55 @@ input:focus {
     font-size: 2.6rem;
   }
 }
+
+/* ===================================== */
+/* YEFRAT TASK - PROFILE PAGE STYLE */
+/* ===================================== */
+
+.profile-page{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.profile-card{
+width:420px;
+background:rgba(17,24,39,0.92);
+border:1px solid var(--panel-border);
+border-radius:24px;
+padding:30px;
+box-shadow:0 18px 60px rgba(0,0,0,0.3);
+}
+
+.profile-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.edit-btn{
+border:none;
+padding:8px 14px;
+border-radius:10px;
+background:linear-gradient(135deg,var(--blue),var(--purple));
+color:white;
+cursor:pointer;
+}
+
+.profile-info label{
+display:block;
+margin-top:15px;
+margin-bottom:6px;
+}
+
+.profile-info input,
+.profile-info select{
+width:100%;
+padding:10px;
+border-radius:10px;
+border:1px solid #334155;
+background:#0b1220;
+color:var(--text);
+}

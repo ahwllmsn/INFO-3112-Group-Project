@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+<main class="profile-page">
+
+<!-- ===================================== -->
+<!-- YEFRAT TASK - PROFILE PAGE -->
+<!-- Edit button + preference selector -->
+<!-- ===================================== -->
+
+<div class="profile-card">
+
+<div class="profile-header">
+
+<h2>User Profile</h2>
+
+<button class="edit-btn" id="editBtn">
+Edit
+</button>
+
+</div>
+
+
+<div class="profile-info">
+
+<label>Name</label>
+<input id="name" value="Developer" disabled>
+
+<label>Email</label>
+<input id="email" value="dev@example.com" disabled>
+
+<label>Looking For</label>
+
+<select id="preference" disabled>
+
+<option>Friend</option>
+<option>Love</option>
+
+</select>
+
+</div>
+
+</div>
+
+<!-- END YEFRAT TASK -->
+
+</main>
+
+
+<script>
+
+/* YEFRAT TASK - Edit button logic */
+
+const editBtn = document.getElementById("editBtn")
+
+const fields = [
+document.getElementById("name"),
+document.getElementById("email"),
+document.getElementById("preference")
+]
+
+let editing = false
+
+editBtn.onclick = function(){
+
+editing = !editing
+
+fields.forEach(field => field.disabled = !editing)
+
+editBtn.innerText = editing ? "Save" : "Edit"
+
+}
+
+</script>
+
+</body>
+</html>
