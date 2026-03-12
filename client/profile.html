@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+<main class="profile-page">
+
+<!-- ===================================== -->
+<!-- YEFRAT TASK - PROFILE PAGE -->
+<!-- Edit button + preference selector -->
+<!-- ===================================== -->
+
+<div class="profile-card">
+
+<div class="profile-header">
+
+<h2>User Profile</h2>
+
+<button class="edit-btn" id="editBtn">
+<img src="assets/Edit.png" alt="Edit">
+</button>
+
+</div>
+
+
+<div class="profile-info">
+
+<label>Name</label>
+<input id="name" value="Developer" disabled>
+
+<label>Email</label>
+<input id="email" value="dev@example.com" disabled>
+
+<label>Looking For</label>
+
+<select id="preference" disabled>
+
+<option>Friend</option>
+<option>Love</option>
+
+</select>
+
+<!-- Add the following back when you are ready to include profile images.
+ Change it however you need but keep the id and element type the same for handling file uploads. -->
+
+<label>Profile Image</label>
+<input type="file" id="select-local-image"> 
+
+</div>
+
+</div>
+
+<!-- END YEFRAT TASK -->
+
+</main>
+
+
+<script>
+
+/* YEFRAT TASK - Edit button logic */
+
+// Note: We should move this logic to profile.js so we can do imports from src/util/api. We can't do it in here,
+// so right now this page won't be able to connect to there server's routing endpoints. - Alyssa
+
+const editBtn = document.getElementById("editBtn")
+
+const fields = [
+document.getElementById("name"),
+document.getElementById("email"),
+document.getElementById("preference")
+]
+
+let editing = false
+
+editBtn.onclick = function(){
+
+editing = !editing
+
+fields.forEach(field => field.disabled = !editing)
+
+editBtn.innerText = editing ? "Save" : "Edit"
+
+}
+
+</script>
+<!-- Please use this JavaScript file (profile.js) to hold all code for profile.html.
+ We cannot do imports in this HTML file (which we need for Express routing),
+ so it would be best if we housed this logic in it's own separate file. - Alyssa -->
+<script type="module" src="./profile.js"></script>
+
+
+</body>
+</html>
