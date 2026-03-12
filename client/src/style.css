@@ -1,99 +1,384 @@
-/* This is all default styling from Vite. We can change all of this if we want to, but I figured I would leave it for now. */
-
+/* =================================================
+   VARIABLES
+================================================= */
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --bg: #0b1120;
+  --panel: #111827;
+  --panel-soft: rgba(255,255,255,0.06);
+  --panel-border: rgba(255,255,255,0.12);
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --text: #e5eefb;
+  --muted: #9db0d1;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --blue: #4f8cff;
+  --purple: #8b5cf6;
+
+  --success: #31c46d;
+  --error: #ff6b6b;
+
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  --transition: 0.2s ease;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* =================================================
+   RESET / BASE
+================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-a:hover {
-  color: #535bf2;
+
+body,
+h1,
+h2,
+h3,
+p {
+  margin: 0;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
   min-height: 100vh;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  color: var(--text);
+
+  background:
+    radial-gradient(circle at top left, rgba(79,140,255,0.18), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(139,92,246,0.16), transparent 24%),
+    var(--bg);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+button,
+input {
+  font: inherit;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* =================================================
+   LAYOUT
+================================================= */
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vanilla:hover {
-  filter: drop-shadow(0 0 2em #f7df1eaa);
+.hero-panel,
+.form-panel {
+  padding: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.card {
-  padding: 2em;
+/* =================================================
+   HERO SECTION
+================================================= */
+
+.hero-content {
+  width: min(560px, 100%);
 }
 
-.read-the-docs {
-  color: #888;
+.badge {
+  display: inline-block;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+
+  background: rgba(79,140,255,0.14);
+  border: 1px solid rgba(79,140,255,0.28);
+  color: #c9ddff;
+
+  font-size: 0.92rem;
+  margin-bottom: 1.2rem;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.hero-content h1 {
+  font-size: clamp(2.4rem, 4vw, 4.4rem);
+  line-height: 1;
+  margin-bottom: 0.9rem;
+}
+
+.hero-text {
+  max-width: 48ch;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 1.7rem;
+}
+
+/* =================================================
+   FEATURES
+================================================= */
+
+.feature-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.feature-card {
+  padding: 1.1rem;
+  border-radius: 18px;
+
+  background: var(--panel-soft);
+  border: 1px solid var(--panel-border);
+
+  backdrop-filter: blur(8px);
+}
+
+.feature-card h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.45rem;
+}
+
+.feature-card p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+.feature-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.feature-icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* =================================================
+   FORM SHELL
+================================================= */
+
+.form-shell {
+  width: min(440px, 100%);
+  padding: 1.75rem;
+
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--panel-border);
+
+  background: rgba(17,24,39,0.92);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.28);
+}
+
+/* =================================================
+   TABS
+================================================= */
+
+.tab-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+
+  padding: 8px;
+  border-radius: var(--radius-md);
+
+  background: #0f172a;
+  margin-bottom: 1.6rem;
+}
+
+.tab {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+
+  border: none;
+  background: transparent;
+  color: var(--muted);
+
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: var(--transition);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.tab.active {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: white;
+}
+
+/* =================================================
+   FORMS
+================================================= */
+
+.auth-form {
+  display: none;
+}
+
+.auth-form.active-form {
+  display: block;
+}
+
+.auth-form h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 1.4rem;
+}
+
+/* flow spacing */
+.auth-form > * + * {
+  margin-top: 0.9rem;
+}
+
+label {
+  font-size: 0.95rem;
+}
+
+/* =================================================
+   INPUTS
+================================================= */
+
+input {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+
+  border-radius: var(--radius-sm);
+  border: 1px solid #334155;
+
+  background: #0b1220;
+  color: var(--text);
+
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(79,140,255,0.15);
+}
+
+/* =================================================
+   PASSWORD FIELD
+================================================= */
+
+.password-field {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  border: none;
+  background: transparent;
+  color: #86b4ff;
+  cursor: pointer;
+}
+
+/* =================================================
+   PASSWORD RULES
+================================================= */
+
+.password-rules {
+  padding: 0.9rem 1rem;
+  margin-top: 1rem;
+
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(148,163,184,0.18);
+
+  background: rgba(11,18,32,0.86);
+}
+
+.password-rules p {
+  margin-bottom: 0.6rem;
+  color: #d6e2f6;
+}
+
+.password-rules ul {
+  padding-left: 1.1rem;
+}
+
+.password-rules li {
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+
+.password-rules li.valid {
+  color: var(--success);
+}
+
+/* =================================================
+   MESSAGE
+================================================= */
+
+.message {
+  min-height: 22px;
+  font-size: 0.93rem;
+  margin-top: 0.8rem;
+}
+
+.message.error {
+  color: var(--error);
+}
+
+.message.success {
+  color: var(--success);
+}
+
+/* =================================================
+   BUTTON
+================================================= */
+
+.primary-button {
+  width: 100%;
+  margin-top: 1.4rem;
+  padding: 0.9rem;
+
+  border-radius: 14px;
+  border: none;
+
+  font-weight: 600;
+  color: white;
+
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+.primary-button:hover {
+  opacity: 0.96;
+  transform: translateY(-1px);
+}
+
+.primary-button:active {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+
+/* =================================================
+   RESPONSIVE
+================================================= */
+
+@media (max-width: 900px) {
+
+  .page {
+    grid-template-columns: 1fr;
   }
-  a:hover {
-    color: #747bff;
+
+  .hero-panel,
+  .form-panel {
+    padding: 1.5rem;
   }
-  button {
-    background-color: #f9f9f9;
+
+  .hero-content h1 {
+    font-size: 2.6rem;
+  }
+}
+
+/* =================================================
+   MOTION ACCESSIBILITY
+================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
   }
 }
