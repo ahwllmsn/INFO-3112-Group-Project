@@ -47,6 +47,12 @@ Edit
 
 </select>
 
+<!-- Add the following back when you are ready to include profile images.
+ Change it however you need but keep the id and element type the same for handling file uploads. -->
+
+<label>Profile Image</label>
+<input type="file" id="select-local-image"> 
+
 </div>
 
 </div>
@@ -59,6 +65,9 @@ Edit
 <script>
 
 /* YEFRAT TASK - Edit button logic */
+
+// Note: We should move this logic to profile.js so we can do imports from src/util/api. We can't do it in here,
+// so right now this page won't be able to connect to there server's routing endpoints. - Alyssa
 
 const editBtn = document.getElementById("editBtn")
 
@@ -81,6 +90,11 @@ editBtn.innerText = editing ? "Save" : "Edit"
 }
 
 </script>
+<!-- Please use this JavaScript file (profile.js) to hold all code for profile.html.
+ We cannot do imports in this HTML file (which we need for Express routing),
+ so it would be best if we housed this logic in it's own separate file. - Alyssa -->
+<script type="module" src="./profile.js"></script>
+
 
 </body>
 </html>
