@@ -2,20 +2,19 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>User Profile</title>
+
 <link rel="stylesheet" href="./style.css">
+
 </head>
 
 <body>
 
 <main class="profile-page">
-
-<!-- ===================================== -->
-<!-- YEFRAT TASK - PROFILE PAGE -->
-<!-- Edit button + preference selector -->
-<!-- ===================================== -->
 
 <div class="profile-card">
 
@@ -23,9 +22,7 @@
 
 <h2>User Profile</h2>
 
-<button class="edit-btn" id="editBtn">
-<img src="assets/Edit.png" alt="Edit">
-</button>
+<button class="edit-btn" id="editBtn">Edit</button>
 
 </div>
 
@@ -33,32 +30,88 @@
 <div class="profile-info">
 
 <label>Name</label>
-<input id="name" value="Developer" disabled>
+<input id="name" placeholder="Enter your name" disabled>
+
 
 <label>Email</label>
-<input id="email" value="dev@example.com" disabled>
+<input id="email" placeholder="Enter your email" disabled>
+
+
+<label>Age</label>
+<input id="age" type="number" placeholder="Enter your age" disabled>
+
+
+<label>Location</label>
+<input id="location" placeholder="City / Country" disabled>
+
+
+<label>Bio</label>
+<input id="bio" placeholder="Tell something about yourself" disabled>
+
 
 <label>Looking For</label>
 
 <select id="preference" disabled>
-<option>Friend</option>
-<option>Love</option>
+
+<option value="Friend">Friend</option>
+<option value="Love">Love</option>
+
 </select>
 
-<!-- input for image uploads -->
+
+
+<label>My Technical Skills</label>
+
+<div id="skillsOwned">
+
+<label><input type="checkbox" value="JavaScript"> JavaScript</label><br>
+
+<label><input type="checkbox" value="Python"> Python</label><br>
+
+<label><input type="checkbox" value="Java"> Java</label><br>
+
+<label><input type="checkbox" value="C++"> C++</label><br>
+
+<label><input type="checkbox" value="React"> React</label><br>
+
+<label><input type="checkbox" value="Node.js"> Node.js</label>
+
+</div>
+
+
+
+<label>Skills I Want In Partner</label>
+
+<div id="skillsWanted">
+
+<label><input type="checkbox" value="JavaScript"> JavaScript</label><br>
+
+<label><input type="checkbox" value="Python"> Python</label><br>
+
+<label><input type="checkbox" value="Java"> Java</label><br>
+
+<label><input type="checkbox" value="C++"> C++</label><br>
+
+<label><input type="checkbox" value="React"> React</label><br>
+
+<label><input type="checkbox" value="Node.js"> Node.js</label>
+
+</div>
+
+
 
 <label>Profile Image</label>
+
 <input type="file" id="select-local-image">
 
-</div>
 
 </div>
 
-<!-- END YEFRAT TASK -->
+</div>
 
 </main>
 
-<!-- JS logic moved to profile.js as requested -->
+
 <script type="module" src="./profile.js"></script>
 
 </body>
