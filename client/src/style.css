@@ -382,3 +382,23 @@ input:focus {
     transition: none !important;
   }
 }
+/* =================================================
+   Skills Menu
+================================================= */
+
+.skills-menu {
+margin-top: 8px;
+margin-bottom: 15px;
+}
+
+.skills-menu summary {
+cursor: pointer;
+font-weight: bold;
+background: #eee;
+padding: 6px;
+border-radius: 5px;
+}
+
+.skills-menu div {
+padding: 8px;
+}

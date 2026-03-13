@@ -60,50 +60,33 @@
 
 
 
-<label>My Technical Skills</label>
+<label>My Technical Skills (select up to 3)</label>
+<select id="ownedSkillSelect">
+  <option value="">Select Skill</option>
+  <option value="JavaScript">JavaScript</option>
+  <option value="Python">Python</option>
+  <option value="Java">Java</option>
+  <option value="C++">C++</option>
+  <option value="React">React</option>
+  <option value="Node.js">Node.js</option>
+</select>
+<div id="skillsOwned" class="skill-tags"></div>
 
-<div id="skillsOwned">
+<label>Skills I Want In Partner (select up to 3)</label>
+<select id="wantedSkillSelect">
+  <option value="">Select Skill</option>
+  <option value="JavaScript">JavaScript</option>
+  <option value="Python">Python</option>
+  <option value="Java">Java</option>
+  <option value="C++">C++</option>
+  <option value="React">React</option>
+  <option value="Node.js">Node.js</option>
+</select>
+<div id="skillsWanted" class="skill-tags"></div>
 
-<label><input type="checkbox" value="JavaScript"> JavaScript</label><br>
-
-<label><input type="checkbox" value="Python"> Python</label><br>
-
-<label><input type="checkbox" value="Java"> Java</label><br>
-
-<label><input type="checkbox" value="C++"> C++</label><br>
-
-<label><input type="checkbox" value="React"> React</label><br>
-
-<label><input type="checkbox" value="Node.js"> Node.js</label>
-
-</div>
-
-
-
-<label>Skills I Want In Partner</label>
-
-<div id="skillsWanted">
-
-<label><input type="checkbox" value="JavaScript"> JavaScript</label><br>
-
-<label><input type="checkbox" value="Python"> Python</label><br>
-
-<label><input type="checkbox" value="Java"> Java</label><br>
-
-<label><input type="checkbox" value="C++"> C++</label><br>
-
-<label><input type="checkbox" value="React"> React</label><br>
-
-<label><input type="checkbox" value="Node.js"> Node.js</label>
-
-</div>
-
-
-
-<label>Profile Image</label>
-
-<input type="file" id="select-local-image">
-
+<label>Profile Photos (max 3)</label>
+<input type="file" id="select-local-image" accept="image/*" multiple>
+<div id="photoPreview"></div>
 
 </div>
 

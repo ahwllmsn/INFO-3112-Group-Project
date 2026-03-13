@@ -435,3 +435,47 @@ color:var(--text);
     transition: none !important;
   }
 }
+/* =================================================
+   Skills Menu
+================================================= */
+
+.skill-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:8px;
+}
+
+.skill-tag{
+  background:#4CAF50;
+  color:white;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  cursor:default;
+}
+
+.skill-tag span{
+  margin-left:6px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+
+/* =================================================
+   Photos
+================================================= */
+#photoPreview {
+display: flex;
+gap: 10px;
+margin-top: 10px;
+}
+
+#photoPreview img {
+width: 100px;
+height: 100px;
+object-fit: cover;
+border-radius: 10px;
+}
