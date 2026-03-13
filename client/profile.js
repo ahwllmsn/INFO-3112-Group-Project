@@ -1,33 +1,63 @@
-/*
-Please include an input element with the id of "select-local-image" in the profile.html page so the user
-may select a local image on their machine to upload as their profile photo. - Alyssa
+/* =================================================
+   PROFILE PAGE LOGIC
+   (Moved here as requested)
+================================================= */
 
-<input type="file" id="select-local-image"/>
-*/
+/* YEFRAT TASK - Edit button logic */
 
-// Handle file upload with Base64 encoding.
-document.getElementById("select-local-image").onchange = (event) => { 
-    const target = event.target;
-    const image = target.files[0];
+const editBtn = document.getElementById("editBtn")
 
-    // console.log(target);
-    console.log(image);
+const fields = [
+document.getElementById("name"),
+document.getElementById("email"),
+document.getElementById("preference")
+]
 
-    try {
-        const reader = new FileReader();
-        image ? reader.readAsBinaryString(image) : null;
-        reader.onload = (readerEvent) => {
-            const binary_string = reader.result;
-            const encoded_string = btoa(binary_string); // This is the value we will store in MongoDB.
-            // console.log("base64:",encoded_string);
+let editing = false
 
-            // Now you can save this encoded string value (or an array/object of these) into the user object that holds all their data.
-            // This way, we can store it in MongoDB. - Alyssa
-        }
-    } catch (e) {
-        console.log(e);
-    }
-};
+editBtn.onclick = function(){
+
+editing = !editing
+
+fields.forEach(field => field.disabled = !editing)
+
+editBtn.innerText = editing ? "Save" : "Edit"
+
+}
 
 
+/* =================================================
+   PROFILE IMAGE UPLOAD
+================================================= */
 
+document.getElementById("select-local-image").onchange = (event) => {
+
+const target = event.target
+const image = target.files[0]
+
+console.log(image)
+
+try {
+
+const reader = new FileReader()
+
+image ? reader.readAsBinaryString(image) : null
+
+reader.onload = () => {
+
+const binary_string = reader.result
+
+const encoded_string = btoa(binary_string)
+
+// This encoded string can now be stored in MongoDB
+console.log("Base64 image string:", encoded_string)
+
+}
+
+} catch (e) {
+
+console.log(e)
+
+}
+
+}
