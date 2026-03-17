@@ -1,3 +1,4 @@
+import * as api from './src/util/api.js';
 /* ===============================
 Editable Fields & Profile Save
 =============================== */
@@ -45,9 +46,10 @@ editBtn.onclick = function() {
       gender: document.getElementById("gender").value,
       matchGender: document.getElementById("matchGender").value,
     }
-    console.log(profileInfo)
+    // console.log(profileInfo); 
+    // Update profile info in the database.
+    api.users.editProfile(profileInfo);
   }
-
   editBtn.innerText = editing ? "Save" : "Edit"
 }
 
