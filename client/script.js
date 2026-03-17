@@ -79,7 +79,7 @@ function validatePassword(password) {
 
 function validateUsername(username) {
 
-  if (username.length < 3) {
+  if (username.length < 2) { // Changed this to 2 because first names can be 2 letters. - Alyssa
     return false;
   }
 
@@ -153,7 +153,7 @@ signupForm.addEventListener('submit', async (event) => {
   if (!validateUsername(firstName)) {
 
     signupMessage.className = 'message error';
-    signupMessage.textContent = 'Username must be at least 3 letters.';
+    signupMessage.textContent = 'Invalid first name. Please enter 2 or more alphabetic characters.';
     return;
 
   }
@@ -183,6 +183,13 @@ signupForm.addEventListener('submit', async (event) => {
 
     signupMessage.className = "message success";
     signupMessage.textContent = "Account created successfully!";
+
+    localStorage.setItem("userEmail", email);
+
+    setTimeout(() => { 
+      window.location.href = "profile.html";
+
+    }, 1000);
 
   }
   else if (signUpResult.status == 409) {
