@@ -118,6 +118,23 @@ app.post('/create-or-edit-profile', async (req, res) => {
         res.sendStatus(500);
     }
 });
+''
+
+/* =============================
+   GET PROFILE INFO
+============================= */
+app.post('/get-profile-data', async (req, res) => {
+    try {
+        let request_body = req.body;
+        let profileInfo = await retrieveOneUser(request_body.email);
+        res.json(profileInfo);
+        res.sendStatus(200);
+    } catch (e) {
+        console.log(e)
+        res.sendStatus(500);
+    }
+});
+
 
 
 /* =============================

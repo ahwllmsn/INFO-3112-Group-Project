@@ -65,6 +65,24 @@ const users = {
         });
         return response;
     },
+
+    /* =============================
+       RETRIEVE USER DATA
+    ============================= */
+
+    getUser: async (email) => {
+
+        let response = await fetch(serverRoute('get-profile-data'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({ email })
+
+        });
+
+        let data = await response.json();
+        console.log("api.js data:",data);
+        return data;
+    },
 };
 
 
