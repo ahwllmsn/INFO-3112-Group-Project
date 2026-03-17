@@ -9,15 +9,27 @@ const fields = [
   document.getElementById("age"),
   document.getElementById("location"),
   document.getElementById("bio"),
-  document.getElementById("preference")
+  document.getElementById("preference"),
+  document.getElementById("gender"),        
+  document.getElementById("matchGender") 
 ]
 
-let editing = false
+//Had to double this bit up to make the button work correctly
+
+let editing = true
 let uploadedImages = []
+  fields.forEach(f => f.disabled = !editing)
+  document.getElementById("ownedSkillSelect").disabled = !editing
+  document.getElementById("wantedSkillSelect").disabled = !editing
+  document.getElementById("select-local-image").disabled = !editing
+  editBtn.innerText = editing ? "Save" : "Edit"
 
 editBtn.onclick = function() {
   editing = !editing
   fields.forEach(f => f.disabled = !editing)
+  document.getElementById("ownedSkillSelect").disabled = !editing
+  document.getElementById("wantedSkillSelect").disabled = !editing
+  document.getElementById("select-local-image").disabled = !editing
 
   if(!editing){
     const profileInfo = {
@@ -29,7 +41,9 @@ editBtn.onclick = function() {
       preference: document.getElementById("preference").value,
       skillsOwned: ownedSkills,
       skillsWanted: wantedSkills,
-      photos: uploadedImages
+      photos: uploadedImages,
+      gender: document.getElementById("gender").value,
+      matchGender: document.getElementById("matchGender").value,
     }
     console.log(profileInfo)
   }
@@ -38,41 +52,70 @@ editBtn.onclick = function() {
 }
 
 /* ===============================
-IMAGE UPLOAD (MAX 3 PHOTOS)
+IMAGE UPLOAD (MAX 3 PHOTOS + REMOVE)
 =============================== */
 
 const imageInput = document.getElementById("select-local-image")
 const preview = document.getElementById("photoPreview")
 
 imageInput.onchange = function(event){
-  const files = event.target.files
-  if(files.length > 3){
-    alert("You can only upload up to 3 photos.")
-    event.target.value = ""
-    preview.innerHTML = ""
-    uploadedImages = []
+  const files = Array.from(event.target.files)
+
+  if(uploadedImages.length + files.length > 3){
+    alert("You can only have up to 3 photos total.")
+    imageInput.value = ""
     return
   }
 
-  preview.innerHTML = ""
-  uploadedImages = []
-
-  Array.from(files).forEach(file => {
+  files.forEach(file => {
     const reader = new FileReader()
     reader.readAsDataURL(file)
-    reader.onload = () => {
-      const base64 = reader.result
-      uploadedImages.push(base64)
 
-      const img = document.createElement("img")
-      img.src = base64
-      img.style.width = "100px"
-      img.style.height = "100px"
-      img.style.objectFit = "cover"
-      img.style.margin = "5px"
-      img.style.borderRadius = "8px"
-      preview.appendChild(img)
+    reader.onload = () => {
+      uploadedImages.push(reader.result)
+      renderImages()
     }
+  })
+
+  imageInput.value = "" 
+}
+
+function renderImages(){
+  preview.innerHTML = ""
+
+  uploadedImages.forEach((imgSrc, index) => {
+    const wrapper = document.createElement("div")
+    wrapper.style.position = "relative"
+    wrapper.style.display = "inline-block"
+    wrapper.style.margin = "5px"
+
+    const img = document.createElement("img")
+    img.src = imgSrc
+    img.style.width = "100px"
+    img.style.height = "100px"
+    img.style.objectFit = "cover"
+    img.style.borderRadius = "8px"
+
+    const removeBtn = document.createElement("button")
+    removeBtn.innerText = "✕"
+    removeBtn.style.position = "absolute"
+    removeBtn.style.top = "0"
+    removeBtn.style.right = "0"
+    removeBtn.style.background = "red"
+    removeBtn.style.color = "white"
+    removeBtn.style.border = "none"
+    removeBtn.style.cursor = "pointer"
+    removeBtn.style.borderRadius = "50%"
+
+    removeBtn.onclick = () => {
+      if(!editing) return  
+      uploadedImages.splice(index, 1)
+      renderImages()
+    }
+
+    wrapper.appendChild(img)
+    wrapper.appendChild(removeBtn)
+    preview.appendChild(wrapper)
   })
 }
 

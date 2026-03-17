@@ -386,12 +386,13 @@ height:100vh;
 }
 
 .profile-card{
-width:420px;
-background:rgba(17,24,39,0.92);
-border:1px solid var(--panel-border);
-border-radius:24px;
-padding:30px;
-box-shadow:0 18px 60px rgba(0,0,0,0.3);
+  width:100%;
+  max-width:900px;  
+  background:rgba(17,24,39,0.92);
+  border:1px solid var(--panel-border);
+  border-radius:24px;
+  padding:40px;      
+  box-shadow:0 18px 60px rgba(142, 198, 212, 0.3);
 }
 
 .profile-header{
