@@ -99,13 +99,11 @@ app.post('/sign-up', async (req, res) => {
 
 
 /* =============================
-   CREATE PROFILE
+   CREATE OR EDIT PROFILE
 ============================= */
 
-app.post('/create-profile', async (req, res) => {
-
+app.post('/create-or-edit-profile', async (req, res) => {
     try {
-
         let request_body = req.body;
 
         let result = await updateProfileFields(request_body.profileInfo);
@@ -113,40 +111,12 @@ app.post('/create-profile', async (req, res) => {
         res.body = result;
 
         res.sendStatus(200);
-
     } catch (e) {
 
         console.log(e);
 
         res.sendStatus(500);
-
     }
-
-});
-
-
-/* =============================
-   EDIT PROFILE
-============================= */
-
-app.post('/edit-profile', async (req, res) => {
-
-    try {
-
-        let request_body = req.body;
-
-        let result = await updateProfileFields(request_body.profileInfo);
-
-        res.sendStatus(200);
-
-    } catch (e) {
-
-        console.log(e);
-
-        res.sendStatus(500);
-
-    }
-
 });
 
 

@@ -52,42 +52,19 @@ const users = {
 
 
     /* =============================
-       CREATE PROFILE
-    ============================= */
-
-    createProfile: async (profileInfo) => {
-
-        let response = await fetch(serverRoute('create-profile'), {
-
-            headers,
-            method: 'POST',
-            body: JSON.stringify({ profileInfo })
-
-        });
-
-        return response;
-
-    },
-
-
-    /* =============================
-       EDIT PROFILE
+       CREATE OR EDIT PROFILE
     ============================= */
 
     editProfile: async (profileInfo) => {
 
-        let response = await fetch(serverRoute('edit-profile'), {
-
+        let response = await fetch(serverRoute('create-or-edit-profile'), {
             headers,
             method: 'POST',
             body: JSON.stringify({ profileInfo })
 
         });
-
         return response;
-
-    }
-
+    },
 };
 
 
