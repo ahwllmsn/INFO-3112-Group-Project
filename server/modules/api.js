@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { addUser, retrieveOneUserLogin, retrieveOneUser, updateProfileFields } from "./data.js";
+import { getMatchScores } from "./matching-algo.js";
 
 const app = express();
 
@@ -128,14 +129,25 @@ app.post('/get-profile-data', async (req, res) => {
         let request_body = req.body;
         let profileInfo = await retrieveOneUser(request_body.email);
         res.json(profileInfo);
-        res.sendStatus(200);
     } catch (e) {
         console.log(e)
         res.sendStatus(500);
     }
 });
 
-
+/* =============================
+   GET MATCHES ARRAY FOR 1 USER
+============================= */
+app.post('/get-potential-matches', async (req, res) => {
+    try {
+        let request_body = req.body;
+        let matchesArray = await getMatchScores(request_body.email);
+        res.json(matchesArray);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
 
 /* =============================
    START SERVER

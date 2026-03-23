@@ -80,7 +80,6 @@ const users = {
         });
 
         let data = await response.json();
-        console.log("api.js data:",data);
         return data;
     },
 };
@@ -88,8 +87,19 @@ const users = {
 
 const matches = {
 
-    // Future matching APIs can go here
-
+    /* =============================
+      GET MATCHES ARRAY FOR 1 USER
+    ============================= */
+    getPotentialMatchesList: async (email) => {
+        let response = await fetch(serverRoute('get-potential-matches'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({email})
+        });
+        let matchesArray = await response.json();
+        console.log("matches arr:", matchesArray);
+        return matchesArray;
+    }
 };
 
 
