@@ -3,7 +3,7 @@ import * as db from './db.js';
 
 const DATABASE_NAME = "INFO-3112-Project";
 const USER_COLLECTION = "users";
-const MATCHES_COLLECTIOn = "matches"; // Placeholder for when we have matches (temporary).
+const MATCHES_COLLECTION = "matches";
 
 const addUser = async (user) => {
     let context = undefined;
@@ -129,6 +129,61 @@ const retrieveAllMatchData = async () => {
 
 }
 
+const addMatch = async (matchData) => {
+    let context = undefined;
+    try {
+        context = await db.initDatabase(env.DB_URI);
+        let doesMatchExist = await retrieveMatch(matchData);
+        console.log("Does match exist?", doesMatchExist);
+        if (doesMatchExist != undefined) {
+            console.log("Cannot add new match, it already exists in the database.");
+            return false;
+        }
+        let result = await db.insertDocument(context, DATABASE_NAME, MATCHES_COLLECTION, matchData);
+        console.log(`Successfully inserted a new match between [${matchData.u1_email} & ${matchData.u2_email}] into the database!`);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+}
+
+const markCommunicationExposed = async (matchData) => {
+    let context = undefined;
+    try {
+        context = await db.initDatabase(env.DB_URI);
+
+        const query = {"u1_email":matchData.u1_email, "u2_email":matchData.u2_email };
+        let match = await db.findDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query);
+
+        let updatedField = {"exposedCommunication":true};
+        // Add new fields to preexisting document.
+        await db.updateDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query, updatedField);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+        console.log(`Successfully marked the match between [${matchData.u1_email} & ${matchData.u2_email}] as profile info exchanged!`);
+}
+
+const retrieveMatch = async (matchData) => {
+    let match = undefined;
+    let context = undefined;
+    try {
+        context = await db.initDatabase(env.DB_URI);
+
+        const query = {"u1_email":matchData.u1_email, "u2_email":matchData.u2_email };
+        match = await db.findDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+    console.log("match:", match);
+    return match;
+}
+
 export {
     DATABASE_NAME,
     USER_COLLECTION, 
@@ -137,5 +192,7 @@ export {
     retrieveOneUser,
     retrieveAllUsers,
     updateProfileFields,
-    retrieveAllMatchData
+    retrieveAllMatchData,
+    addMatch,
+    markCommunicationExposed
 }
