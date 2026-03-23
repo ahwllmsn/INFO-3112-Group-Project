@@ -34,7 +34,7 @@ editBtn.onclick = function() {
 
   if(!editing){
     const profileInfo = {
-      name: document.getElementById("name").value,
+      firstName: document.getElementById("name").value,
       email: document.getElementById("email").value,
       age: document.getElementById("age").value,
       location: document.getElementById("location").value,
