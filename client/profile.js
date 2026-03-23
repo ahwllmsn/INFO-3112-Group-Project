@@ -1,3 +1,4 @@
+import * as api from './src/util/api.js';
 /* ===============================
 Editable Fields & Profile Save
 =============================== */
@@ -39,7 +40,7 @@ editBtn.onclick = function() {
     }
 
     const profileInfo = {
-      name: document.getElementById("name").value,
+      firstName: document.getElementById("name").value,
       email: document.getElementById("email").value,
       age: document.getElementById("age").value,
       location: document.getElementById("location").value,
@@ -51,19 +52,8 @@ editBtn.onclick = function() {
       gender: document.getElementById("gender").value,
       matchGender: document.getElementById("matchGender").value,
     }
-
     console.log(profileInfo)
-
-    editing = false
-
-  } else {
-    editing = true
   }
-
-  fields.forEach(f => f.disabled = !editing)
-  document.getElementById("ownedSkillSelect").disabled = !editing
-  document.getElementById("wantedSkillSelect").disabled = !editing
-  document.getElementById("select-local-image").disabled = !editing
 
   editBtn.innerText = editing ? "Save" : "Edit"
 }

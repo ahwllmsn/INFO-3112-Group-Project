@@ -102,6 +102,33 @@ const retrieveAllUsers = async () => { // Has not been used yet.
     return users;
 }
 
+const retrieveAllMatchData = async () => {
+    let users = [];
+    let context = undefined;
+    try {
+
+        // Project to only get id, email, password.
+        const projection = {
+            _id: 0,
+            email: 1,
+            skillsOwned: 1,
+            skillsWanted: 1,
+            gender: 1,
+            preference: 1,
+            matchGender: 1,
+        }
+
+        context = await db.initDatabase(env.DB_URI);
+        users = await db.findDocuments(context, DATABASE_NAME, USER_COLLECTION, {}, projection);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+    return users;
+
+}
+
 export {
     DATABASE_NAME,
     USER_COLLECTION, 
@@ -110,4 +137,5 @@ export {
     retrieveOneUser,
     retrieveAllUsers,
     updateProfileFields,
+    retrieveAllMatchData
 }
