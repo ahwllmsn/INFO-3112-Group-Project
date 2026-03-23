@@ -25,13 +25,19 @@ let uploadedImages = []
   editBtn.innerText = editing ? "Save" : "Edit"
 
 editBtn.onclick = function() {
-  editing = !editing
-  fields.forEach(f => f.disabled = !editing)
-  document.getElementById("ownedSkillSelect").disabled = !editing
-  document.getElementById("wantedSkillSelect").disabled = !editing
-  document.getElementById("select-local-image").disabled = !editing
 
-  if(!editing){
+  if (editing) {
+
+    if (ownedSkills.length < 1) {
+      alert("Please select at least 1 owned skill.")
+      return
+    }
+
+    if (wantedSkills.length < 1) {
+      alert("Please select at least 1 wanted skill.")
+      return
+    }
+
     const profileInfo = {
       name: document.getElementById("name").value,
       email: document.getElementById("email").value,
@@ -45,8 +51,19 @@ editBtn.onclick = function() {
       gender: document.getElementById("gender").value,
       matchGender: document.getElementById("matchGender").value,
     }
+
     console.log(profileInfo)
+
+    editing = false
+
+  } else {
+    editing = true
   }
+
+  fields.forEach(f => f.disabled = !editing)
+  document.getElementById("ownedSkillSelect").disabled = !editing
+  document.getElementById("wantedSkillSelect").disabled = !editing
+  document.getElementById("select-local-image").disabled = !editing
 
   editBtn.innerText = editing ? "Save" : "Edit"
 }
