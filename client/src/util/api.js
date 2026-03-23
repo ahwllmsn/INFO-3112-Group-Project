@@ -99,7 +99,29 @@ const matches = {
         let matchesArray = await response.json();
         console.log("matches arr:", matchesArray);
         return matchesArray;
-    }
+    },
+    saveNewMatch: async (matchData) => {
+        let response = await fetch(serverRoute('save-new-match'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({matchData})
+        });
+        if(response.ok) {
+            console.log("Saved a new match!");
+        } else {
+            console.log("Cannot add new match, it already exists in the database.");
+        }
+    },
+    shareCommunicationInfo: async (matchData) => {
+        let response = await fetch(serverRoute('communication-exposed'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({matchData})
+        });
+        if (response.ok) {
+            console.log("Shared emails between 2 users of a match.");
+        }
+    },
 };
 
 

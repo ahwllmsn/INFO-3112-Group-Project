@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { addUser, retrieveOneUserLogin, retrieveOneUser, updateProfileFields } from "./data.js";
+import { addUser, retrieveOneUserLogin, retrieveOneUser, updateProfileFields, addMatch, markCommunicationExposed } from "./data.js";
 import { getMatchScores } from "./matching-algo.js";
 
 const app = express();
@@ -119,7 +119,7 @@ app.post('/create-or-edit-profile', async (req, res) => {
         res.sendStatus(500);
     }
 });
-''
+
 
 /* =============================
    GET PROFILE INFO
@@ -135,6 +135,7 @@ app.post('/get-profile-data', async (req, res) => {
     }
 });
 
+
 /* =============================
    GET MATCHES ARRAY FOR 1 USER
 ============================= */
@@ -148,6 +149,42 @@ app.post('/get-potential-matches', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
+
+/* =============================
+   SAVE NEW MATCH
+============================= */
+app.post('/save-new-match', async (req, res) => {
+    try {
+        let request_body = req.body;
+        let result = await addMatch(request_body.matchData);
+        if (result == false) {
+            res.sendStatus(409); // Record already exists, did not add duplicate.
+        } else {
+            res.body = result;
+            res.sendStatus(200);
+        }
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+/* =============================
+   MARK MATCH AS COMMUNICATION EXPOSED
+============================= */
+app.post('/communication-exposed', async (req, res) => {
+    try {
+        let request_body = req.body;
+        let result = await markCommunicationExposed(request_body.matchData);
+        res.body = result;
+        res.sendStatus(200);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
 
 /* =============================
    START SERVER
