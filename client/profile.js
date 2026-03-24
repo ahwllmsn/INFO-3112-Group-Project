@@ -84,6 +84,8 @@ editBtn.onclick = function() {
       matchGender: document.getElementById("matchGender").value,
     }
     console.log(profileInfo)
+    api.users.editProfile(profileInfo);
+    console.log("Successfully saved profile changes.");
   }
 
   editBtn.innerText = editing ? "Save" : "Edit"
