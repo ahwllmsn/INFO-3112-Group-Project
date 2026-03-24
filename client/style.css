@@ -494,12 +494,12 @@ input:focus {
 /* ===================================== */
 
 .profile-page{
-padding-top: 5%;
-padding-bottom: 5%;
+padding-top: 1%;
+padding-bottom: 1%;
 display:flex;
 justify-content:center;
-align-items:center;
-height:100vh;
+align-items:flex-start;
+min-height:100vh;
 }
 
 .profile-card{
