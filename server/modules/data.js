@@ -137,6 +137,9 @@ const addMatch = async (matchData) => {
         if (doesMatchExist != undefined) {
             console.log("Cannot add new match, it already exists in the database.");
             return false;
+        } else if (matchData.u1_email == undefined || matchData.u2_email == undefined) {
+            console.log("Cannot add new match, not enough email values provided.");
+            return false;
         }
         let result = await db.insertDocument(context, DATABASE_NAME, MATCHES_COLLECTION, matchData);
         console.log(`Successfully inserted a new match between [${matchData.u1_email} & ${matchData.u2_email}] into the database!`);
