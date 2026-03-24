@@ -116,7 +116,7 @@ function createMatchCard(user, score) {
   return `
     <div class="match-card">
       <h4>${escapeHtml(displayName)}</h4>
-      <p class="role">Match Score: ${escapeHtml(String(score))}</p>
+      <p class="role">Compatibility Score: ${escapeHtml(String(score))}</p>
       <p class="bio">${escapeHtml(bio)}</p>
       <p class="match-extra"><strong>Age:</strong> ${escapeHtml(age)}</p>
       <p class="match-extra"><strong>Location:</strong> ${escapeHtml(location)}</p>
