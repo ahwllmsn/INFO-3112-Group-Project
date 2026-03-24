@@ -121,10 +121,9 @@ imageInput.onchange = function(event) {
   const reader = new FileReader();
   reader.readAsDataURL(file)
 
-  reader.reader.onload = () => {
+  reader.onload = () => {
     uploadedImage = reader.result;
     renderImage();
-    rInput.value = ""; 
   }
   imageInput.value = "";
 }
