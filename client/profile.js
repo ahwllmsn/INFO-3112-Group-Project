@@ -60,12 +60,20 @@ editBtn.onclick = function() {
   if (editing) {
 
     if (ownedSkills.length < 1) {
-      alert("Please select at least 1 owned skill.")
+      snackBar.textContent = "Please select at least 1 owned skill.";
+      showSnackBar();
       return
     }
 
     if (wantedSkills.length < 1) {
-      alert("Please select at least 1 wanted skill.")
+      snackBar.textContent = "Please select at least 1 wanted skill.";
+      showSnackBar();
+      return
+    }
+
+    if (!uploadedImage) {
+      snackBar.textContent = "Please provide a profile photo." ;
+      showSnackBar();
       return
     }
 
@@ -90,6 +98,7 @@ editBtn.onclick = function() {
 const saveChanges = async (profileInfo) => {
   api.users.editProfile(profileInfo);
   console.log("Successfully saved profile changes.");
+  snackBar.textContent = "Saved changes";
   showSnackBar();
 }
 
@@ -99,13 +108,11 @@ IMAGE UPLOAD (MAX 3 PHOTOS + REMOVE)
 const imageInput = document.getElementById("select-local-image")
 const preview = document.getElementById("photoPreview")
 
-imageInput.onchange = function(event){
-  const files = Array.from(event.target.files)
-
-  if(uploadedImages.length + files.length > 3){
-    alert("You can only have up to 3 photos total.")
-    imageInput.value = ""
-    return
+imageInput.onchange = function(event) {
+  if (event.target.files.length > 1) {
+    snackBar.textContent = "You may only upload 1 photo.";
+    showSnackBar();
+    return;
   }
 
   files.forEach(file => {
@@ -173,7 +180,8 @@ function addSkill(selectId, containerId, skillArray){
     if(!skill) return
     if(skillArray.includes(skill)) return
     if(skillArray.length >= 3){
-      alert("You can only select up to 3 skills.")
+      snackBar.textContent = "You can only select up to 3 skills.";
+      showSnackBar();
       select.value = ""
       return
     }
@@ -271,12 +279,14 @@ getProfileInfo();
 
 // Snackbar
 // https://www.w3schools.com/howto/howto_js_snackbar.asp
+const snackBar = document.getElementById("snackbar");
+
 const showSnackBar = () => {
   let snackBar = document.getElementById("snackbar");
   snackBar.className = "show";
   setTimeout(() => {
     snackBar.className = snackBar.className.replace("show", "");
-  }, 1000)
+  }, 2500)
 }
 
 
