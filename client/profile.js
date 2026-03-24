@@ -48,7 +48,7 @@ const fields = [
 
 //Had to double this bit up to make the button work correctly
 let editing = true
-let uploadedImages = []
+let uploadedImage = undefined;
   fields.forEach(f => f.disabled = !editing)
   document.getElementById("ownedSkillSelect").disabled = !editing
   document.getElementById("wantedSkillSelect").disabled = !editing
@@ -86,7 +86,7 @@ editBtn.onclick = function() {
       preference: document.getElementById("preference").value,
       skillsOwned: ownedSkills,
       skillsWanted: wantedSkills,
-      photos: uploadedImages,
+      photos: uploadedImage,
       gender: document.getElementById("gender").value,
       matchGender: document.getElementById("matchGender").value,
     }
@@ -103,7 +103,7 @@ const saveChanges = async (profileInfo) => {
 }
 
 /* ===============================
-IMAGE UPLOAD (MAX 3 PHOTOS + REMOVE)
+IMAGE UPLOAD (MAX 1 PHOTO + REMOVE)
 =============================== */
 const imageInput = document.getElementById("select-local-image")
 const preview = document.getElementById("photoPreview")
@@ -114,57 +114,59 @@ imageInput.onchange = function(event) {
     showSnackBar();
     return;
   }
+  const file = event.target.files[0];
+  if (!file) {
+    return;
+  }
+  const reader = new FileReader();
+  reader.readAsDataURL(file)
 
-  files.forEach(file => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-
-    reader.onload = () => {
-      uploadedImages.push(reader.result)
-      renderImages()
-    }
-  })
-
-  imageInput.value = "" 
+  reader.reader.onload = () => {
+    uploadedImage = reader.result;
+    renderImage();
+    rInput.value = ""; 
+  }
+  imageInput.value = "";
 }
 
-function renderImages(){
+function renderImage(){
   preview.innerHTML = ""
 
-  uploadedImages.forEach((imgSrc, index) => {
-    const wrapper = document.createElement("div")
-    wrapper.style.position = "relative"
-    wrapper.style.display = "inline-block"
-    wrapper.style.margin = "5px"
+  if(!uploadedImage) return;
+  
+  const wrapper = document.createElement("div")
+  wrapper.style.position = "relative"
+  wrapper.style.display = "inline-block"
+  wrapper.style.margin = "5px"
 
-    const img = document.createElement("img")
-    img.src = imgSrc
-    img.style.width = "100px"
-    img.style.height = "100px"
-    img.style.objectFit = "cover"
-    img.style.borderRadius = "8px"
+  const img = document.createElement("img")
+  img.src = uploadedImage;
+  img.style.width = "100px"
+  img.style.height = "100px"
+  img.style.objectFit = "cover"
+  img.style.borderRadius = "8px"
 
-    const removeBtn = document.createElement("button")
-    removeBtn.innerText = "✕"
-    removeBtn.style.position = "absolute"
-    removeBtn.style.top = "0"
-    removeBtn.style.right = "0"
-    removeBtn.style.background = "red"
-    removeBtn.style.color = "white"
-    removeBtn.style.border = "none"
-    removeBtn.style.cursor = "pointer"
-    removeBtn.style.borderRadius = "50%"
+  const removeBtn = document.createElement("button")
+  removeBtn.innerText = "✕"
+  removeBtn.style.position = "absolute"
+  removeBtn.style.top = "0"
+  removeBtn.style.right = "0"
+  removeBtn.style.background = "red"
+  removeBtn.style.color = "white"
+  removeBtn.style.border = "none"
+  removeBtn.style.cursor = "pointer"
+  removeBtn.style.borderRadius = "50%"
 
-    removeBtn.onclick = () => {
-      if(!editing) return  
-      uploadedImages.splice(index, 1)
-      renderImages()
-    }
+  removeBtn.onclick = () => {
+    if(!editing) return;  
+    uploadedImage = "";
+    renderImage();
+  }
 
-    wrapper.appendChild(img)
-    wrapper.appendChild(removeBtn)
-    preview.appendChild(wrapper)
-  })
+  wrapper.appendChild(img)
+  wrapper.appendChild(removeBtn)
+  preview.appendChild(wrapper)
+  
 }
 
 /* ===============================
@@ -268,10 +270,10 @@ const populateProfileFields = (profileInfo) => {
     renderSkills("skillsWanted", wantedSkills);
   }
 
-  // Profile images.
+  // Profile image.
   if (profileInfo.photos) {
-    uploadedImages = [...profileInfo.photos];
-    renderImages();
+    uploadedImage = [...profileInfo.photos];
+    renderImage();
   }
 }
 
@@ -282,7 +284,6 @@ getProfileInfo();
 const snackBar = document.getElementById("snackbar");
 
 const showSnackBar = () => {
-  let snackBar = document.getElementById("snackbar");
   snackBar.className = "show";
   setTimeout(() => {
     snackBar.className = snackBar.className.replace("show", "");
