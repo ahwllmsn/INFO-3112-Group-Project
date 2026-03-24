@@ -187,7 +187,7 @@ signupForm.addEventListener('submit', async (event) => {
     localStorage.setItem("userEmail", email);
 
     setTimeout(() => { 
-      window.location.href = "profile.html";
+      window.location.href = "home.html";
 
     }, 1000);
 
@@ -241,7 +241,7 @@ loginForm.addEventListener('submit', async (event) => {
 
     setTimeout(() => {
 
-      window.location.href = "profile.html";
+      window.location.href = "home.html";
 
     }, 1000);
 

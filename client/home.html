@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LookingForLove - Home</title>
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body>
+
+  <header class="topbar">
+  <a href="home.html" class="app-title">LookingForLove</a>
+  <button id="menuBtn" class="menu-btn">&#9776;</button>
+</header>
+
+  <div id="overlay" class="overlay"></div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <h2>Menu</h2>
+      <button id="closeBtn" class="close-btn">&times;</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-link active">Home</a>
+      <a href="profile.html" class="nav-link">Profile</a>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </nav>
+  </aside>
+
+  <main class="home-page">
+    <section class="welcome-section">
+      <div class="welcome-text">
+        <h2>Welcome back, <span id="userName">Developer</span> 👋</h2>
+        <p>
+          Explore profiles, discover matches, and connect with developers
+          who share your interests and goals.
+        </p>
+      </div>
+    </section>
+
+    <section class="quick-info">
+      <div class="info-card">
+        <h3>Your Account</h3>
+        <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
+        <p><strong>Status:</strong> <span id="userStatus">Loading...</span></p>
+      </div>
+
+      <div class="info-card">
+        <h3>Quick Actions</h3>
+        <div class="action-buttons">
+          <a href="profile.html" class="primary-btn">Go to Profile</a>
+          <button id="findMatchesBtn" class="secondary-btn">Find Matches</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+  <div class="section-header">
+    <h3>Suggested Matches</h3>
+  </div>
+
+  <div class="matches-grid" id="matchesGrid">
+    <p class="loading-text">Loading matches...</p>
+  </div>
+</section>
+  </main>
+
+  <script type="module" src="./home.js"></script>
+</body>
+</html>
