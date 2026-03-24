@@ -354,6 +354,121 @@ input:focus {
   opacity: 0.9;
 }
 
+
+/*==============================================
+  adding side nav bar
+===============================================*/
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(7, 18, 40, 0.92);
+  border-bottom: 1px solid rgba(142, 198, 212, 0.28);
+  backdrop-filter: blur(8px);
+}
+
+.app-title {
+  text-decoration: none;
+  color: #60a5fa;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.menu-btn {
+  background: transparent;
+  border: none;
+  color: #f8fbff;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 260px;
+  height: 100%;
+  background: #091838;
+  border-left: 1px solid rgba(142, 198, 212, 0.28);
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.35);
+  z-index: 1200;
+  transition: right 0.3s ease;
+  padding: 24px 18px;
+}
+
+.sidebar.open {
+  right: 0;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #f8fbff;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #f8fbff;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebar-nav a,
+.logout-btn {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  color: #f8fbff;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(142, 198, 212, 0.28);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sidebar-nav a:hover,
+.logout-btn:hover,
+.sidebar-nav a.active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s ease;
+  z-index: 1100;
+}
+
+.overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* =================================================
    RESPONSIVE
 ================================================= */

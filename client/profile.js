@@ -1,4 +1,35 @@
 import * as api from './src/util/api.js';
+
+/*============================
+for side nav bar
+==========================*/
+
+const menuBtn = document.getElementById("menuBtn");
+const closeBtn = document.getElementById("closeBtn");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+const logoutBtn = document.getElementById("logoutBtn");
+
+function openSidebar() {
+  sidebar.classList.add("open");
+  overlay.classList.add("show");
+}
+
+function closeSidebar() {
+  sidebar.classList.remove("open");
+  overlay.classList.remove("show");
+}
+
+menuBtn?.addEventListener("click", openSidebar);
+closeBtn?.addEventListener("click", closeSidebar);
+overlay?.addEventListener("click", closeSidebar);
+
+logoutBtn?.addEventListener("click", () => {
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("userName");
+  window.location.href = "index.html";
+});
+
 /* ===============================
 Editable Fields & Profile Save
 =============================== */
