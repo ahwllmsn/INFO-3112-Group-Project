@@ -1,9 +1,8 @@
 import * as api from './src/util/api.js';
 
 /*============================
-for side nav bar
+  Side Nav bar
 ==========================*/
-
 const menuBtn = document.getElementById("menuBtn");
 const closeBtn = document.getElementById("closeBtn");
 const sidebar = document.getElementById("sidebar");
@@ -30,6 +29,7 @@ logoutBtn?.addEventListener("click", () => {
   window.location.href = "index.html";
 });
 
+
 /* ===============================
 Editable Fields & Profile Save
 =============================== */
@@ -47,7 +47,6 @@ const fields = [
 ]
 
 //Had to double this bit up to make the button work correctly
-
 let editing = true
 let uploadedImages = []
   fields.forEach(f => f.disabled = !editing)
@@ -94,7 +93,6 @@ editBtn.onclick = function() {
 /* ===============================
 IMAGE UPLOAD (MAX 3 PHOTOS + REMOVE)
 =============================== */
-
 const imageInput = document.getElementById("select-local-image")
 const preview = document.getElementById("photoPreview")
 
@@ -162,7 +160,6 @@ function renderImages(){
 /* ===============================
 SKILL TAG SYSTEM (MAX 3)
 =============================== */
-
 let ownedSkills = []
 let wantedSkills = []
 
@@ -207,3 +204,67 @@ function renderSkills(containerId, skillArray){
 // Initialize both skill selectors
 addSkill("ownedSkillSelect","skillsOwned",ownedSkills)
 addSkill("wantedSkillSelect","skillsWanted",wantedSkills)
+
+
+// Auto-populate profile if the fields already exist.
+const getProfileInfo = async () => {
+  let currentEmail = localStorage.getItem("userEmail");
+  let profileInfo = await api.users.getUser(currentEmail);
+  populateProfileFields(profileInfo);
+}
+
+const populateProfileFields = (profileInfo) => {
+  // Text input fields.
+  if(profileInfo.firstName) {
+    document.getElementById("name").value = profileInfo.firstName;
+  }
+  if(profileInfo.email) {
+    document.getElementById("email").value = profileInfo.email;
+    // Should not allow the user to edit their email. This will create a lot of database issues if they alter it!
+    document.getElementById("email").disabled = true; 
+  }
+  if(profileInfo.age) {
+    document.getElementById("age").value = profileInfo.age;
+    // If an initial value has been given for age, it is constant and can never be altered again (for safety reasons).
+    document.getElementById("age").disabled = true;
+  }
+  if(profileInfo.location) {
+    document.getElementById("location").value = profileInfo.location;
+  }
+  if(profileInfo.bio) {
+    document.getElementById("bio").value = profileInfo.bio;
+  }
+
+  // Drop-down menus.
+  if(profileInfo.gender) {
+    document.getElementById("gender").value = profileInfo.gender;
+  }
+  if(profileInfo.matchGender) {
+    document.getElementById("matchGender").value = profileInfo.matchGender;
+  }
+  if(profileInfo.preference) {
+    document.getElementById("preference").value = profileInfo.preference;
+  }
+
+  // Skills drop-down menus
+  if (profileInfo.skillsOwned) {
+    ownedSkills = [...profileInfo.skillsOwned];
+    renderSkills("skillsOwned", ownedSkills);
+  }
+
+  if (profileInfo.skillsWanted) {
+    wantedSkills = [...profileInfo.skillsWanted];
+    renderSkills("skillsWanted", wantedSkills);
+  }
+
+  // Profile images.
+  if (profileInfo.photos) {
+    uploadedImages = [...profileInfo.photos];
+    renderImages();
+  }
+}
+
+getProfileInfo();
+
+
+
