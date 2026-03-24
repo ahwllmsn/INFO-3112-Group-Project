@@ -125,8 +125,8 @@ const retrieveAllUserMatchData = async () => {
     } finally {
         context?.close();
     }
+    console.log(`Successfully retrieved all matching fields for all users.`);
     return users;
-
 }
 
 const addMatch = async (matchData) => {
@@ -134,7 +134,6 @@ const addMatch = async (matchData) => {
     try {
         context = await db.initDatabase(env.DB_URI);
         let doesMatchExist = await retrieveMatch(matchData);
-        console.log("Does match exist?", doesMatchExist);
         if (doesMatchExist != undefined) {
             console.log("Cannot add new match, it already exists in the database.");
             return false;
@@ -172,16 +171,33 @@ const retrieveMatch = async (matchData) => {
     let context = undefined;
     try {
         context = await db.initDatabase(env.DB_URI);
-
         const query = {"u1_email":matchData.u1_email, "u2_email":matchData.u2_email };
+
         match = await db.findDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query);
     } catch (e) {
         console.error(e);
     } finally {
         context?.close();
     }
-    console.log("match:", match);
+    console.log(`Successfully retrieved match data for the match between ${matchData.u1_email} & ${matchData.u2_email}`);
     return match;
+}
+
+const retrieveListOfMatchesByUser = async (email) => {
+    let matches = [];
+    let context = undefined;
+    try {
+        context = await db.initDatabase(env.DB_URI);
+        const query = {$or:[ { "u1_email":email },{ "u2_email":email } ]};
+
+        matches = await db.findDocuments(context, DATABASE_NAME, MATCHES_COLLECTION, query);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+    console.log(`Successfully retrieved ${matches.length} match${matches.length > 1 ? "es" : ""} for ${email}`);
+    return matches; 
 }
 
 export {
@@ -194,5 +210,6 @@ export {
     updateProfileFields,
     retrieveAllUserMatchData,
     addMatch,
-    markCommunicationExposed
+    markCommunicationExposed,
+    retrieveListOfMatchesByUser
 }
