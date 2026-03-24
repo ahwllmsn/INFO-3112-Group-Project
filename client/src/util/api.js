@@ -100,6 +100,10 @@ const matches = {
         console.log("matches arr:", matchesArray);
         return matchesArray;
     },
+
+    /* =============================
+      SAVE NEW MATCH
+    ============================= */    
     saveNewMatch: async (matchData) => {
         let response = await fetch(serverRoute('save-new-match'), {
             headers,
@@ -112,6 +116,10 @@ const matches = {
             console.log("Cannot add new match, it already exists in the database.");
         }
     },
+    
+    /* =============================
+      MARK MATCH AS COMMUNICATION EXPOSED
+    ============================= */
     shareCommunicationInfo: async (matchData) => {
         let response = await fetch(serverRoute('communication-exposed'), {
             headers,
