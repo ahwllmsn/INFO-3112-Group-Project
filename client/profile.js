@@ -271,7 +271,7 @@ const populateProfileFields = (profileInfo) => {
 
   // Profile image.
   if (profileInfo.photos) {
-    uploadedImage = [...profileInfo.photos];
+    uploadedImage = profileInfo.photos;
     renderImage();
   }
 }
