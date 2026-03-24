@@ -102,7 +102,7 @@ const retrieveAllUsers = async () => { // Has not been used yet.
     return users;
 }
 
-const retrieveAllMatchData = async () => {
+const retrieveAllUserMatchData = async () => {
     let users = [];
     let context = undefined;
     try {
@@ -192,7 +192,7 @@ export {
     retrieveOneUser,
     retrieveAllUsers,
     updateProfileFields,
-    retrieveAllMatchData,
+    retrieveAllUserMatchData,
     addMatch,
     markCommunicationExposed
 }

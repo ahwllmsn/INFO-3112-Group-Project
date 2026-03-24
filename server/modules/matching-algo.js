@@ -1,7 +1,7 @@
-import { retrieveAllMatchData, retrieveOneUser } from "./data.js";
+import { retrieveAllUserMatchData, retrieveOneUser } from "./data.js";
 
 const getMatchScores = async (email) => {
-    let userData = await retrieveAllMatchData();
+    let userData = await retrieveAllUserMatchData();
     let currentUser = await retrieveOneUser(email);
 
     let matches = [];
