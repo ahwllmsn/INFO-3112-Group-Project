@@ -34,7 +34,7 @@ const calculateScore = (u1, u2) => {
         return -1;
     }
     // Incompatible if both not looking for same thing (friendship vs love).
-    else if ((u1.preference == "Friend" && u2.preference == "Love") || (u1.preference == "Love" && u2.preference == "Friend")) {
+    else if ((u1.preference == "Friendship" && u2.preference == "Love") || (u1.preference == "Love" && u2.preference == "Friendship")) {
         return -1;
     }
     // Gender incompatible - e.g. looking for female, but other user is male.
@@ -45,7 +45,6 @@ const calculateScore = (u1, u2) => {
     else if (u1.skillsOwned == null || u1.skillsWanted == null || u2.skillsOwned == null || u2.skillsWanted == null) {
         return -1;
     }
-
     let score = skillsCompatible(u1.skillsOwned, u2.skillsWanted) + skillsCompatible(u2.skillsOwned, u1.skillsWanted);
     return score;
 }
