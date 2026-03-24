@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { addUser, retrieveOneUserLogin, retrieveOneUser, updateProfileFields, addMatch, markCommunicationExposed } from "./data.js";
+import { addUser, retrieveOneUserLogin, retrieveOneUser, updateProfileFields, addMatch, markCommunicationExposed, retrieveListOfMatchesByUser } from "./data.js";
 import { getMatchScores } from "./matching-algo.js";
 
 const app = express();
@@ -176,9 +176,23 @@ app.post('/save-new-match', async (req, res) => {
 app.post('/communication-exposed', async (req, res) => {
     try {
         let request_body = req.body;
-        let result = await markCommunicationExposed(request_body.matchData);
-        res.body = result;
+        let matchesArray = await markCommunicationExposed(request_body.matchData);
+        res.body = matchesArray;
         res.sendStatus(200);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+/* =============================
+   GET LIST OF ALL MATCHES FOR 1 USER
+============================= */
+app.post('/find-my-matches', async (req, res) => {
+    try {
+        let request_body = req.body;
+        let result = await retrieveListOfMatchesByUser(request_body.email);
+        res.json(result);
     } catch (e) {
         console.log(e);
         res.sendStatus(500);

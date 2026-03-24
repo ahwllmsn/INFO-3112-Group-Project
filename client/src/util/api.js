@@ -97,7 +97,7 @@ const matches = {
             body: JSON.stringify({email})
         });
         let matchesArray = await response.json();
-        console.log("matches arr:", matchesArray);
+        console.log(`Successfully retrieved ${matchesArray.length} potential match${matchesArray.length > 1 ? "es" : ""} for ${email}`);
         return matchesArray;
     },
 
@@ -116,7 +116,7 @@ const matches = {
             console.log("Cannot add new match, it already exists in the database.");
         }
     },
-    
+
     /* =============================
       MARK MATCH AS COMMUNICATION EXPOSED
     ============================= */
@@ -127,9 +127,21 @@ const matches = {
             body: JSON.stringify({matchData})
         });
         if (response.ok) {
-            console.log("Shared emails between 2 users of a match.");
+            console.log(`Successfully marked the match between [${matchData.u1_email} & ${matchData.u2_email}] as profile info exchanged!`);
         }
     },
+    findMyMatches: async (email) => {
+        let response = await fetch(serverRoute('find-my-matches'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({email})
+        });
+        let matchesArray = await response.json();
+        if (response.ok) {
+            console.log(`Successfully retrieved ${matchesArray.length} match${matchesArray.length > 1 ? "es" : ""} for ${email}`);
+        }
+        return matchesArray;
+    }
 };
 
 
