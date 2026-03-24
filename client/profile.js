@@ -82,12 +82,15 @@ editBtn.onclick = function() {
       gender: document.getElementById("gender").value,
       matchGender: document.getElementById("matchGender").value,
     }
-    console.log(profileInfo)
-    api.users.editProfile(profileInfo);
-    console.log("Successfully saved profile changes.");
+    saveChanges(profileInfo);
   }
-
   editBtn.innerText = editing ? "Save" : "Edit"
+}
+
+const saveChanges = async (profileInfo) => {
+  api.users.editProfile(profileInfo);
+  console.log("Successfully saved profile changes.");
+  showSnackBar();
 }
 
 /* ===============================
@@ -265,6 +268,16 @@ const populateProfileFields = (profileInfo) => {
 }
 
 getProfileInfo();
+
+// Snackbar
+// https://www.w3schools.com/howto/howto_js_snackbar.asp
+const showSnackBar = () => {
+  let snackBar = document.getElementById("snackbar");
+  snackBar.className = "show";
+  setTimeout(() => {
+    snackBar.className = snackBar.className.replace("show", "");
+  }, 1000)
+}
 
 
 
