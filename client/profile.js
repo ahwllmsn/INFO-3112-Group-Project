@@ -188,6 +188,11 @@ function addSkill(selectId, containerId, skillArray){
     }
 
     skillArray.push(skill)
+    if (containerId == "skillsOwned") {
+      ownedSkills = skillArray;
+    } else {
+      wantedSkills = skillArray;
+    }
     renderSkills(containerId, skillArray)
     select.value = ""
   }
