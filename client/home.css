@@ -256,7 +256,7 @@ body {
 ========================= */
 .matches-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
 }
 
@@ -277,6 +277,10 @@ body {
   margin-bottom: 8px;
 }
 
+.match-card p {
+  padding-bottom: 10px;
+}
+
 /* =========================
    MATCH CARD TOP
 ========================= */
@@ -288,8 +292,8 @@ body {
 }
 
 .match-photo {
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   border-radius: 14px;
   object-fit: cover;
 }
@@ -308,13 +312,11 @@ body {
 
 .role {
   color: #93c5fd;
-  margin-bottom: 12px;
+  margin-bottom: 0px;
 }
 
-.bio {
-  color: #cbd5e1;
+.bio, .location, .looking-for {
   line-height: 1.5;
-  margin-bottom: 14px;
 }
 
 /* =========================
@@ -333,6 +335,7 @@ body {
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 0.82rem;
+  margin-top: 5px;
 }
 
 /* =========================

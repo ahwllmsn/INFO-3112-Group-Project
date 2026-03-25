@@ -136,15 +136,15 @@ function createMatchCard(user, score) {
         }
 
         <div>
-          <h4>${name}</h4>
-          <p class="role">Match Score: ${score}</p>
-          <p>${user?.gender || ""} | ${age}</p>
+          <h3>${name}</h3 >
+          <p class="role">Compatibility Score: ${score}/6</p>
+          <p>${user?.gender || ""}, ${age}</p>
         </div>
       </div>
 
-      <p class="bio">${bio}</p>
-      <p><strong>Location:</strong> ${location}</p>
-      <p><strong>Looking For:</strong> ${user?.preference || ""}</p>
+      <p class="bio"><strong>Bio:</strong> ${bio}</p>
+      <p class="location"><strong>Location:</strong> ${location}</p>
+      <p class="looking-for"><strong>Looking For:</strong> ${user?.preference || ""}</p>
 
       <div class="tags">
         ${
