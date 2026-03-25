@@ -114,6 +114,23 @@ async function loadMatches() {
 /* =========================
    CREATE MATCH CARD
 ========================= */
+const matchScoreWord = (score) => {
+  switch (score) {
+    case 6:
+      return "Excellent";
+    case 5:
+      return "Strong";
+    case 4:
+      return "Great";
+    case 3: 
+      return "Good";
+    case 2:
+      return "Okay";
+    default:
+    return "Fair";
+  }
+}
+
 function createMatchCard(user, score) {
   const name = user?.name || user?.firstName || "Unknown";
   const age = user?.age || "N/A";
@@ -137,7 +154,7 @@ function createMatchCard(user, score) {
 
         <div>
           <h3>${name}</h3 >
-          <p class="role">Compatibility Score: ${score}/6</p>
+          <p class="role">Compatibility: ${matchScoreWord(score)}</p>
           <p>${user?.gender || ""}, ${age}</p>
         </div>
       </div>
