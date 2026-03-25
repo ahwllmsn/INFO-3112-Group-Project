@@ -1,6 +1,11 @@
 # INFO-3112-Group-Project
 INFO-3112 - Section 2 - Group 5 - Vision Executors
 
+## Project Overview
+- **Type of Application:** Desktop website
+- **Technology Stack:** MongoDB + Express + Node
+- **Current Code Submission State:** TBD - We need to update this for the Sprint 2 Retrospective Checkpoint
+
 ## Functional Requirements
 1. As a member, I want to log into the application using an appropriate verification method.
 2. As a member, I want to capture basic profile information.
