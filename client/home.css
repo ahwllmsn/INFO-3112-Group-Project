@@ -1,3 +1,6 @@
+/* =========================
+   GLOBAL STYLES
+========================= */
 * {
   margin: 0;
   padding: 0;
@@ -11,6 +14,9 @@ body {
   min-height: 100vh;
 }
 
+/* =========================
+   TOP BAR
+========================= */
 .topbar {
   position: sticky;
   top: 0;
@@ -42,6 +48,10 @@ body {
 .app-title:hover {
   opacity: 0.8;
 }
+
+/* =========================
+   SIDEBAR
+========================= */
 .sidebar {
   position: fixed;
   top: 0;
@@ -53,7 +63,7 @@ body {
   box-shadow: 4px 0 25px rgba(0, 0, 0, 0.35);
   z-index: 1200;
   padding: 22px 18px;
-  transition: left 0.3s ease;
+  transition: right 0.3s ease;
 }
 
 .sidebar.open {
@@ -106,6 +116,9 @@ body {
   border-color: #60a5fa;
 }
 
+/* =========================
+   SIDEBAR OVERLAY
+========================= */
 .overlay {
   position: fixed;
   inset: 0;
@@ -121,12 +134,18 @@ body {
   visibility: visible;
 }
 
+/* =========================
+   PAGE LAYOUT
+========================= */
 .home-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 30px 20px 50px;
 }
 
+/* =========================
+   WELCOME SECTION
+========================= */
 .welcome-section {
   background: linear-gradient(135deg, #2563eb, #7c3aed, #db2777);
   padding: 38px;
@@ -146,6 +165,9 @@ body {
   color: #e2e8f0;
 }
 
+/* =========================
+   QUICK INFO SECTION
+========================= */
 .quick-info {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -170,6 +192,9 @@ body {
   line-height: 1.8;
 }
 
+/* =========================
+   ACTION BUTTONS
+========================= */
 .action-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -203,6 +228,9 @@ body {
   opacity: 0.92;
 }
 
+/* =========================
+   SECTION HEADERS
+========================= */
 .section-header {
   margin-bottom: 18px;
 }
@@ -212,17 +240,20 @@ body {
 }
 
 .loading-text {
-  color: var(--text-soft);
+  color: #cbd5e1;
   font-size: 1rem;
   margin: 0;
 }
 
 .match-extra {
   margin: 8px 0;
-  color: var(--text-soft);
+  color: #cbd5e1;
   line-height: 1.4;
 }
 
+/* =========================
+   MATCHES GRID
+========================= */
 .matches-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -246,6 +277,35 @@ body {
   margin-bottom: 8px;
 }
 
+/* =========================
+   MATCH CARD TOP
+========================= */
+.match-top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.match-photo {
+  width: 70px;
+  height: 70px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.no-photo {
+  width: 70px;
+  height: 70px;
+  border-radius: 14px;
+  background: #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
 .role {
   color: #93c5fd;
   margin-bottom: 12px;
@@ -257,6 +317,9 @@ body {
   margin-bottom: 14px;
 }
 
+/* =========================
+   TAGS
+========================= */
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -272,6 +335,9 @@ body {
   font-size: 0.82rem;
 }
 
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 768px) {
   .topbar {
     padding: 16px 18px;

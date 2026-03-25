@@ -1,32 +1,38 @@
 import { users, matches } from "./src/util/api.js";
 
+// Sidebar elements
 const menuBtn = document.getElementById("menuBtn");
 const closeBtn = document.getElementById("closeBtn");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
 const logoutBtn = document.getElementById("logoutBtn");
 
+// User info elements
 const userEmailText = document.getElementById("userEmail");
 const userNameText = document.getElementById("userName");
-const matchesGrid = document.getElementById("matchesGrid");
-
 const statusText = document.getElementById("userStatus");
 
+// Matches container
+const matchesGrid = document.getElementById("matchesGrid");
 
+// Get logged in user
 const userEmail = localStorage.getItem("userEmail");
 
-if (userEmail) {
-  statusText.textContent = "● Active";
-  statusText.style.color = "limegreen";
-} else {
-  statusText.textContent = "● Offline";
-  statusText.style.color = "gray";
-}
-
+// Redirect if not logged in
 if (!userEmail) {
   window.location.href = "index.html";
 }
 
+// Status display
+if (userEmail) {
+  statusText.textContent = "● Active";
+  statusText.style.color = "#4ade80";
+} else {
+  statusText.textContent = "● Offline";
+  statusText.style.color = "#94a3b8";
+}
+
+// Sidebar controls
 function openSidebar() {
   sidebar.classList.add("open");
   overlay.classList.add("show");
@@ -41,12 +47,16 @@ menuBtn.addEventListener("click", openSidebar);
 closeBtn.addEventListener("click", closeSidebar);
 overlay.addEventListener("click", closeSidebar);
 
+// Logout
 logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("userEmail");
   localStorage.removeItem("userName");
   window.location.href = "index.html";
 });
 
+/* =========================
+   LOAD CURRENT USER
+========================= */
 async function loadCurrentUser() {
   try {
     const currentUser = await users.getUser(userEmail);
@@ -61,12 +71,15 @@ async function loadCurrentUser() {
 
     userNameText.textContent = displayName;
   } catch (error) {
-    console.error("Could not load current user:", error);
+    console.error("User load error:", error);
     userEmailText.textContent = userEmail;
     userNameText.textContent = userEmail.split("@")[0];
   }
 }
 
+/* =========================
+   LOAD MATCHES
+========================= */
 async function loadMatches() {
   matchesGrid.innerHTML = `<p class="loading-text">Loading matches...</p>`;
 
@@ -74,72 +87,77 @@ async function loadMatches() {
     const matchList = await matches.getPotentialMatchesList(userEmail);
 
     if (!Array.isArray(matchList) || matchList.length === 0) {
-      matchesGrid.innerHTML = `<p class="loading-text">No matches found yet.</p>`;
+      matchesGrid.innerHTML = `<p class="loading-text">No matches found.</p>`;
       return;
     }
 
+    // Get full user data for each match
     const matchCards = await Promise.all(
       matchList.map(async (match) => {
         try {
           const matchedUser = await users.getUser(match.u2_email);
           return createMatchCard(matchedUser, match.compatibility_score);
-        } catch (error) {
-          console.error("Could not load matched user:", match.u2_email, error);
+        } catch (err) {
+          console.error("Match load error:", err);
           return "";
         }
       })
     );
 
-    const validCards = matchCards.filter(card => card.trim() !== "");
-
-    if (validCards.length === 0) {
-      matchesGrid.innerHTML = `<p class="loading-text">No matches available right now.</p>`;
-      return;
-    }
-
-    matchesGrid.innerHTML = validCards.join("");
+    matchesGrid.innerHTML = matchCards.join("");
   } catch (error) {
-    console.error("Could not load matches:", error);
-    matchesGrid.innerHTML = `<p class="loading-text">Could not load matches.</p>`;
+    console.error("Matches error:", error);
+    matchesGrid.innerHTML = `<p class="loading-text">Error loading matches.</p>`;
   }
 }
 
+/* =========================
+   CREATE MATCH CARD
+========================= */
 function createMatchCard(user, score) {
-  const displayName = user?.name || user?.firstName || "Unknown User";
-  const bio = user?.bio || "No bio added yet.";
-  const location = user?.location || "Location not added";
-  const age = user?.age ? `${user.age}` : "N/A";
-  const preference = user?.preference || "Not specified";
-  const skillsOwned = Array.isArray(user?.skillsOwned) ? user.skillsOwned : [];
-  const topSkills = skillsOwned.slice(0, 3);
+  const name = user?.name || user?.firstName || "Unknown";
+  const age = user?.age || "N/A";
+  const location = user?.location || "Not specified";
+  const bio = user?.bio || "No bio yet";
+
+  const skills = Array.isArray(user?.skillsOwned) ? user.skillsOwned.slice(0, 3) : [];
+
+  // Photo from DB (base64 string)
+  const photo = user?.photos;
 
   return `
     <div class="match-card">
-      <h4>${escapeHtml(displayName)}</h4>
-      <p class="role">Compatibility Score: ${escapeHtml(String(score))}</p>
-      <p class="bio">${escapeHtml(bio)}</p>
-      <p class="match-extra"><strong>Age:</strong> ${escapeHtml(age)}</p>
-      <p class="match-extra"><strong>Location:</strong> ${escapeHtml(location)}</p>
-      <p class="match-extra"><strong>Looking For:</strong> ${escapeHtml(preference)}</p>
+
+      <div class="match-top">
+        ${
+          photo
+            ? `<img src="${photo}" class="match-photo" />`
+            : `<div class="no-photo">No Photo</div>`
+        }
+
+        <div>
+          <h4>${name}</h4>
+          <p class="role">Match Score: ${score}</p>
+          <p>${user?.gender || ""} | ${age}</p>
+        </div>
+      </div>
+
+      <p class="bio">${bio}</p>
+      <p><strong>Location:</strong> ${location}</p>
+      <p><strong>Looking For:</strong> ${user?.preference || ""}</p>
+
       <div class="tags">
         ${
-          topSkills.length
-            ? topSkills.map(skill => `<span>${escapeHtml(skill)}</span>`).join("")
-            : `<span>No skills listed</span>`
+          skills.length
+            ? skills.map(s => `<span>${s}</span>`).join("")
+            : `<span>No skills</span>`
         }
       </div>
+
     </div>
   `;
 }
 
-function escapeHtml(text) {
-  return String(text)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
+// Load data
 loadCurrentUser();
 loadMatches();
