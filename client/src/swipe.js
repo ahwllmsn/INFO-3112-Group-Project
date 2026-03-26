@@ -1,4 +1,4 @@
-import { users, matches } from "./src/util/api.js";
+import { users, matches } from "./util/api.js";
 
 const swipeContainer = document.getElementById("swipeContainer");
 const yesBtn = document.getElementById("yesBtn");

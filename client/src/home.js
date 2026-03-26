@@ -1,4 +1,4 @@
-import { users, matches } from "./src/util/api.js";
+import { users, matches } from "./util/api.js";
 
 // Sidebar elements
 const menuBtn = document.getElementById("menuBtn");
@@ -31,21 +31,6 @@ if (userEmail) {
   statusText.textContent = "● Offline";
   statusText.style.color = "#94a3b8";
 }
-
-// Sidebar controls
-function openSidebar() {
-  sidebar.classList.add("open");
-  overlay.classList.add("show");
-}
-
-function closeSidebar() {
-  sidebar.classList.remove("open");
-  overlay.classList.remove("show");
-}
-
-menuBtn.addEventListener("click", openSidebar);
-closeBtn.addEventListener("click", closeSidebar);
-overlay.addEventListener("click", closeSidebar);
 
 // Logout
 logoutBtn.addEventListener("click", () => {

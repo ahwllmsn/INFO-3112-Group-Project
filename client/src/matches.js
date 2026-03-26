@@ -1,4 +1,4 @@
-import { users, matches } from "./src/util/api.js";
+import { users, matches } from "./util/api.js";
 
 const matchesContainer = document.getElementById("successfulMatches");
 
@@ -8,7 +8,7 @@ async function loadSuccessfulMatches(){
 
 try{
 
-const matchList = await matches.getPotentialMatchesList(userEmail);
+const matchList = await matches.findMyMatches(userEmail);
 
 if(!matchList || matchList.length === 0){
 

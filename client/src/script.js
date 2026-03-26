@@ -1,4 +1,4 @@
-import * as api from './src/util/api.js';
+import * as api from './util/api.js';
 
 const loginTab = document.getElementById('loginTab');
 const signupTab = document.getElementById('signupTab');
