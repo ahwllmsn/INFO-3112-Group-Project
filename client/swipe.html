@@ -5,15 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Swipe Matches</title>
 
-<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="./src/css/home.css">
+<link rel="stylesheet" href="./src/css/sidebar.css" />
 
 </head>
 
 <body>
 
 <header class="topbar">
-<a href="home.html" class="app-title">LookingForLove</a>
+    <a href="home.html" class="app-title">LookingForLove</a>
+  <button id="menuBtn" class="menu-btn">&#9776;</button>
 </header>
+
+<div id="overlay" class="overlay"></div>
+
+<aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+        <h2>Menu</h2>
+        <button id="closeBtn" class="close-btn">&times;</button>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="home.html" class="nav-link">Home</a>
+        <a href="profile.html" class="nav-link">My Profile</a>
+        <a href="swipe.html" class="nav-link active">Find Matches</a>
+        <a href="matches.html" class="nav-link">View My Matches</a>
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+    </nav>
+</aside>
+
 
 <main class="swipe-page">
 
@@ -26,7 +45,9 @@
 
 </main>
 
-<script type="module" src="./swipe.js"></script>
+<script type="module" src="./src/swipe.js"></script>
+<script type="module" src="./src/util/sidebar.js"></script>
+
 
 <div id="matchPopup" class="match-popup">
 

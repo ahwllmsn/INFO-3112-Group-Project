@@ -6,7 +6,8 @@
 
 <title>Successful Matches</title>
 
-<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="./src/css/home.css">
+<link rel="stylesheet" href="./src/css/sidebar.css" />
 
 </head>
 
@@ -14,19 +15,39 @@
 
 <header class="topbar">
 <a href="home.html" class="app-title">LookingForLove</a>
+<button id="menuBtn" class="menu-btn">&#9776;</button>
 </header>
+
+  <div id="overlay" class="overlay"></div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <h2>Menu</h2>
+      <button id="closeBtn" class="close-btn">&times;</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-link">Home</a>
+      <a href="profile.html" class="nav-link">My Profile</a>
+      <a href="swipe.html" class="nav-link">Find Matches</a>
+      <a href="matches.html" class="nav-link active">View My Matches</a>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </nav>
+  </aside>
 
 <main class="matches-page">
 
-<h2 class="page-title">Successful Matches</h2>
+<h2 class="page-title" style="padding: 0.8em;">Successful Matches</h2>
 
-<div id="successfulMatches" class="matches-grid">
+<div id="successfulMatches" class="matches-grid" style="padding-left:0.8em;">
 <p class="loading-text">Loading matches...</p>
 </div>
 
 </main>
 
-<script type="module" src="./matches.js"></script>
+<script type="module" src="./src/matches.js"></script>
+<script type="module" src="./src/util/sidebar.js"></script>
+
 
 </body>
 </html>

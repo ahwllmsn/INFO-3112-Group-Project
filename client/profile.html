@@ -8,7 +8,10 @@
 
 <title>User Profile</title>
 
-<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./src/css/style.css">
+<link rel="stylesheet" href="./src/util/sidebar.js" />
+<link rel="stylesheet" href="./src/css/sidebar.css" />
+
 
 </head>
 
@@ -26,12 +29,14 @@
     <h2>Menu</h2>
     <button id="closeBtn" class="close-btn">&times;</button>
   </div>
-
-  <nav class="sidebar-nav">
-    <a href="home.html">Home</a>
-    <a href="profile.html" class="active">Profile</a>
-    <button id="logoutBtn" class="logout-btn">Logout</button>
   </nav>
+      <nav class="sidebar-nav">
+      <a href="home.html" class="nav-link">Home</a>
+      <a href="profile.html" class="nav-link active">My Profile</a>
+      <a href="swipe.html" class="nav-link">Find Matches</a>
+      <a href="matches.html" class="nav-link">View My Matches</a>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </nav>
 </aside>
 
 <main class="profile-page">
@@ -129,6 +134,8 @@
 
 </main>
 <div id="snackbar">Saved profile</div>
-<script type="module" src="./profile.js"></script>
+<script type="module" src="./src/profile.js"></script>
+<script type="module" src="./src/util/sidebar.js"></script>
+
 </body>
 </html>
