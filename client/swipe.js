@@ -4,6 +4,10 @@ const swipeContainer = document.getElementById("swipeContainer");
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 
+const matchPopup = document.getElementById("matchPopup");
+const viewMatches = document.getElementById("viewMatches");
+const continueSwipe = document.getElementById("continueSwipe");
+
 const userEmail = localStorage.getItem("userEmail");
 
 let matchList = [];
@@ -100,14 +104,39 @@ ${photo
 
 }
 
+// YES BUTTON (LIKE)
 yesBtn.addEventListener("click", () => {
+
+showMatchPopup();
+
+});
+
+// NO BUTTON (DISLIKE)
+noBtn.addEventListener("click", () => {
 currentIndex++;
 showNextUser();
 });
 
-noBtn.addEventListener("click", () => {
+function showMatchPopup(){
+
+matchPopup.style.display = "flex";
+
+}
+
+// VIEW MATCHES BUTTON
+viewMatches.addEventListener("click", () => {
+
+window.location.href = "matches.html";
+
+});
+
+// CONTINUE SWIPE BUTTON
+continueSwipe.addEventListener("click", () => {
+
+matchPopup.style.display = "none";
 currentIndex++;
 showNextUser();
+
 });
 
 loadSwipeMatches();
