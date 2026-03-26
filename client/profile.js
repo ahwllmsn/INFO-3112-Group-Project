@@ -96,10 +96,18 @@ editBtn.onclick = function() {
 }
 
 const saveChanges = async (profileInfo) => {
-  api.users.editProfile(profileInfo);
-  console.log("Successfully saved profile changes.");
-  snackBar.textContent = "Saved changes";
-  showSnackBar();
+  // let result = 
+
+  try {
+    await api.users.editProfile(profileInfo);
+    console.log("Successfully saved profile changes.");
+    snackBar.textContent = "Saved changes";
+    showSnackBar();
+  } catch (e) {
+    console.log(e);
+    snackBar.textContent = "Error saving profile";
+    showSnackBar();
+  }
 }
 
 /* ===============================

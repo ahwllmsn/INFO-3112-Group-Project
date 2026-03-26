@@ -5,8 +5,13 @@ import { getMatchScores } from "./matching-algo.js";
 
 const app = express();
 
-app.use(express.json());
+// Change maximum JSON body size for express (to avoid errors in sending/receiving user photos).
+// https://stackoverflow.com/questions/71813334/how-to-change-max-size-for-body-parser-express
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({extended: true}));
+
 app.use(cors());
+
 
 app.use((req, _res, next) => {
 
