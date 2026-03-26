@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { addUser, retrieveOneUserLogin, retrieveOneUser, updateProfileFields, addMatch, markCommunicationExposed, retrieveListOfMatchesByUser, likeUser } from "./data.js";
+import { addUser, retrieveOneUserLogin, retrieveOneUser,
+         updateProfileFields, addMatch, markCommunicationExposed,
+         retrieveListOfMatchesByUser, likeUser, dislikeUser } from "./data.js";
 import { getMatchScores } from "./matching-algo.js";
 
 const app = express();
@@ -205,12 +207,26 @@ app.post('/find-my-matches', async (req, res) => {
 });
 
 /* =============================
-   ADD A "LIKED" USER TO A USER'S LIKED ARRAY
+   ADD A "LIKED" USER TO A USER'S LIKED ARRAY (SWIPING YES)
 ============================= */
 app.post('/send-like', async (req, res) => {
     try {
         let request_body = req.body;
         let result = await likeUser(request_body.userEmail, request_body.likeEmail);
+        res.sendStatus(200);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+/* =============================
+   ADD A "DISLIKED" USER TO A USER'S LIKED ARRAY (SWIPING NO)
+============================= */
+app.post('/mark-dislike', async (req, res) => {
+    try {
+        let request_body = req.body;
+        let result = await dislikeUser(request_body.userEmail, request_body.dislikeEmail);
         res.sendStatus(200);
     } catch (e) {
         console.log(e);

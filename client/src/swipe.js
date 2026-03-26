@@ -9,6 +9,7 @@ const viewMatches = document.getElementById("viewMatches");
 const continueSwipe = document.getElementById("continueSwipe");
 
 const userEmail = localStorage.getItem("userEmail");
+const user = await api.users.getUser(userEmail);
 
 let matchList = [];
 let currentIndex = 0;
@@ -17,6 +18,7 @@ let currentUser = {};
 async function loadSwipeMatches() {
   try {
     matchList = await api.matches.getPotentialMatchesList(userEmail);
+
     // Buttons are disabled on default, once list loads buttons are enabled.
     document.getElementById("yesBtn").disabled = false;
     document.getElementById("noBtn").disabled = false;
@@ -27,34 +29,29 @@ async function loadSwipeMatches() {
 }
 
 function showNextUser() {
+  if (user.dislikesList?.includes(matchList[currentIndex].u2_email) || user.likesList?.includes(matchList[currentIndex].u2_email)) {
+    advanceToNextUser();
+  }
 
-if (currentIndex >= matchList.length) {
+  if (currentIndex >= matchList.length) {
 
-swipeContainer.innerHTML = `
+    swipeContainer.innerHTML = `
+    <div class="no-matches">
+      <h2>No More Matches</h2>
 
-<div class="no-matches">
+      <p>You’ve viewed all your potential matches.</p>
 
-<h2>No More Matches</h2>
+      <button id="backHome" class="back-home-btn">
+        Return to Home
+      </button>
+    </div>
+    `;
 
-<p>You’ve viewed all your potential matches.</p>
+    document.getElementById("backHome").addEventListener("click", () => {
+      window.location.href = "home.html";
+  });
 
-<button id="backHome" class="back-home-btn">
-Return to Home
-</button>
-
-</div>
-
-`;
-
-document
-.getElementById("backHome")
-.addEventListener("click", () => {
-
-window.location.href = "home.html";
-
-});
-
-return;
+  return;
 
 }
 
@@ -74,82 +71,75 @@ async function loadUser(email) {
 
 function createSwipeCard(user){
 
-const name =
-user?.name ||
-user?.firstName ||
-user?.email?.split("@")[0] ||
-"Developer";
+  const name =
+    user?.name ||
+    user?.firstName ||
+    user?.email?.split("@")[0] ||
+    "Developer";
 
-const age = user?.age || "N/A";
-const bio = user?.bio || "No bio yet";
-const location = user?.location || "Unknown";
-const photo = user?.photos;
+  const age = user?.age || "N/A";
+  const bio = user?.bio || "No bio yet";
+  const location = user?.location || "Unknown";
+  const photo = user?.photos;
 
-return `
+  return `
+    <div class="swipe-card">
 
-<div class="swipe-card">
+      ${photo 
+      ? `<img src="${photo}" class="swipe-photo"/>`
+      : `<div class="no-photo">No Photo</div>`
+      }
 
-${photo 
-? `<img src="${photo}" class="swipe-photo"/>`
-: `<div class="no-photo">No Photo</div>`
-}
+      <h2>${name}</h2>
 
-<h2>${name}</h2>
+      <p class="age">${age}</p>
 
-<p class="age">${age}</p>
+      <p class="location">${location}</p>
 
-<p class="location">${location}</p>
+      <p class="bio">${bio}</p>
 
-<p class="bio">${bio}</p>
-
-</div>
-
-`;
-
+    </div>`;
 }
 
 // YES BUTTON (LIKE)
 yesBtn.addEventListener("click", async () => {
-  api.matches.likeUser(userEmail);
+  await api.matches.likeUser(userEmail, currentUser.email);
   // If this user that has just been liked has ALSO liked the current user (using the app).
   console.log(currentUser);
   if (currentUser.likesList?.includes(userEmail)) {
     showMatchPopup();
     let matchInfo = {u1_email:userEmail, u2_email:currentUser.email, compatibility_score:matchList[currentIndex].compatibility_score, exposed_communication:false};
     await api.matches.saveNewMatch(matchInfo);
-  // If it's not a match.
+  // If it's not a match yet.
   } else {
-    currentIndex++;
-    showNextUser();
+    advanceToNextUser();
   }
 });
 
 // NO BUTTON (DISLIKE)
 noBtn.addEventListener("click", () => {
-currentIndex++;
-showNextUser();
+  api.matches.dislikeUser(userEmail, currentUser.email);
+  advanceToNextUser();
 });
 
 function showMatchPopup(){
-
-matchPopup.style.display = "flex";
-
+  matchPopup.style.display = "flex";
 }
 
 // VIEW MATCHES BUTTON
 viewMatches.addEventListener("click", () => {
-
-window.location.href = "matches.html";
-
+  window.location.href = "matches.html";
 });
 
 // CONTINUE SWIPE BUTTON
 continueSwipe.addEventListener("click", () => {
-
-matchPopup.style.display = "none";
-currentIndex++;
-showNextUser();
-
+  matchPopup.style.display = "none";
+  advanceToNextUser();
 });
 
 loadSwipeMatches();
+
+const advanceToNextUser = () => {
+  currentIndex++;
+  showNextUser();
+}

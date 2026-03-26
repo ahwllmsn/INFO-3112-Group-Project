@@ -210,8 +210,6 @@ const likeUser = async (userEmail, likeEmail) => {
         context = await db.initDatabase(env.DB_URI);
         user = await retrieveOneUser(userEmail);
 
-        console.log(user);
-
         let newLikesList = [];
         if (user.likesList) {
             newLikesList = [...user.likesList, likeEmail];
@@ -230,6 +228,31 @@ const likeUser = async (userEmail, likeEmail) => {
     console.log(`${likeEmail} is now in ${userEmail}'s liked collection.`);
 }
 
+const dislikeUser = async (userEmail, dislikeEmail) => {
+    let user = undefined;
+    let context = undefined;
+    try {
+        context = await db.initDatabase(env.DB_URI);
+        user = await retrieveOneUser(userEmail);
+
+        let newDislikesList = [];
+        if (user.dislikesList) {
+            newDislikesList = [...user.dislikesList, dislikeEmail];
+        } else {
+            newDislikesList = [dislikeEmail];
+        }
+
+        const newDislikesListObject = {"dislikesList": newDislikesList};
+        let query = {email: userEmail};
+        await db.updateDocument(context, DATABASE_NAME, USER_COLLECTION, query, newDislikesListObject);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+    console.log(`${dislikeEmail} is now in ${userEmail}'s disliked collection.`);
+}
+
 export {
     DATABASE_NAME,
     USER_COLLECTION, 
@@ -242,5 +265,6 @@ export {
     addMatch,
     markCommunicationExposed,
     retrieveListOfMatchesByUser,
-    likeUser
+    likeUser,
+    dislikeUser
 }

@@ -130,6 +130,9 @@ const matches = {
             console.log(`Successfully marked the match between [${matchData.u1_email} & ${matchData.u2_email}] as profile info exchanged!`);
         }
     },
+    /* =============================
+     GET LIST OF ALL MATCHES FOR 1 USER
+    ============================= */
     findMyMatches: async (email) => {
         let response = await fetch(serverRoute('find-my-matches'), {
             headers,
@@ -142,6 +145,9 @@ const matches = {
         }
         return matchesArray;
     },
+    /* =============================
+     ADD A "LIKED" USER TO A USER'S LIKED ARRAY (SWIPING YES)
+    ============================= */
     likeUser: async (userEmail, likeEmail) => {
         let response = await fetch(serverRoute('send-like'), {
             headers,
@@ -150,6 +156,19 @@ const matches = {
         });
         if (response.ok) {
             console.log(`${userEmail} swiped yes on ${likeEmail}!`);
+        }
+    },
+    /* =============================
+     ADD A "DISLIKED" USER TO A USER'S LIKED ARRAY (SWIPING NO)
+    ============================= */
+    dislikeUser: async (userEmail, dislikeEmail) => {
+        let response = await fetch(serverRoute('mark-dislike'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({userEmail, dislikeEmail}) 
+        });
+        if (response.ok) {
+            console.log(`${userEmail} swiped no on ${dislikeEmail}!`);
         }
     }
 };
