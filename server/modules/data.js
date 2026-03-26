@@ -203,6 +203,33 @@ const retrieveListOfMatchesByUser = async (email) => {
     return matches; 
 }
 
+const likeUser = async (userEmail, likeEmail) => {
+    let user = undefined;
+    let context = undefined;
+    try {
+        context = await db.initDatabase(env.DB_URI);
+        user = await retrieveOneUser(userEmail);
+
+        console.log(user);
+
+        let newLikesList = [];
+        if (user.likesList) {
+            newLikesList = [...user.likesList, likeEmail];
+        } else {
+            newLikesList = [likeEmail];
+        }
+
+        const newLikesListObject = {"likesList": newLikesList};
+        let query = {email: userEmail};
+        await db.updateDocument(context, DATABASE_NAME, USER_COLLECTION, query, newLikesListObject);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+    console.log(`${likeEmail} is now in ${userEmail}'s liked collection.`);
+}
+
 export {
     DATABASE_NAME,
     USER_COLLECTION, 
@@ -214,5 +241,6 @@ export {
     retrieveAllUserMatchData,
     addMatch,
     markCommunicationExposed,
-    retrieveListOfMatchesByUser
+    retrieveListOfMatchesByUser,
+    likeUser
 }

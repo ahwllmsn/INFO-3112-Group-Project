@@ -1,4 +1,4 @@
-import { users, matches } from "./util/api.js";
+import * as api from './util/api.js';
 
 const swipeContainer = document.getElementById("swipeContainer");
 const yesBtn = document.getElementById("yesBtn");
@@ -12,10 +12,14 @@ const userEmail = localStorage.getItem("userEmail");
 
 let matchList = [];
 let currentIndex = 0;
+let currentUser = {};
 
 async function loadSwipeMatches() {
   try {
-    matchList = await matches.getPotentialMatchesList(userEmail);
+    matchList = await api.matches.getPotentialMatchesList(userEmail);
+    // Buttons are disabled on default, once list loads buttons are enabled.
+    document.getElementById("yesBtn").disabled = false;
+    document.getElementById("noBtn").disabled = false;
     showNextUser();
   } catch (error) {
     console.error("Swipe load error:", error);
@@ -61,8 +65,8 @@ loadUser(match.u2_email);
 
 async function loadUser(email) {
   try {
-    const user = await users.getUser(email);
-    swipeContainer.innerHTML = createSwipeCard(user);
+    currentUser = await api.users.getUser(email);
+    swipeContainer.innerHTML = createSwipeCard(currentUser);
   } catch (error) {
     console.error("User load error:", error);
   }
@@ -105,10 +109,19 @@ ${photo
 }
 
 // YES BUTTON (LIKE)
-yesBtn.addEventListener("click", () => {
-
-showMatchPopup();
-
+yesBtn.addEventListener("click", async () => {
+  api.matches.likeUser(userEmail);
+  // If this user that has just been liked has ALSO liked the current user (using the app).
+  console.log(currentUser);
+  if (currentUser.likesList?.includes(userEmail)) {
+    showMatchPopup();
+    let matchInfo = {u1_email:userEmail, u2_email:currentUser.email, compatibility_score:matchList[currentIndex].compatibility_score, exposed_communication:false};
+    await api.matches.saveNewMatch(matchInfo);
+  // If it's not a match.
+  } else {
+    currentIndex++;
+    showNextUser();
+  }
 });
 
 // NO BUTTON (DISLIKE)

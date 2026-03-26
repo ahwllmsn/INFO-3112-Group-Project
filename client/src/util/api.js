@@ -141,6 +141,16 @@ const matches = {
             console.log(`Successfully retrieved ${matchesArray.length} match${matchesArray.length > 1 ? "es" : ""} for ${email}`);
         }
         return matchesArray;
+    },
+    likeUser: async (userEmail, likeEmail) => {
+        let response = await fetch(serverRoute('send-like'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({userEmail, likeEmail}) 
+        });
+        if (response.ok) {
+            console.log(`${userEmail} swiped yes on ${likeEmail}!`);
+        }
     }
 };
 
