@@ -12,3 +12,10 @@ function closeSidebar() {
 menuBtn.addEventListener("click", openSidebar);
 closeBtn.addEventListener("click", closeSidebar);
 overlay.addEventListener("click", closeSidebar);
+
+// Logout
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("userName");
+  window.location.href = "index.html";
+});

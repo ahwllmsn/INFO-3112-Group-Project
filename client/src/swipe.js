@@ -103,7 +103,7 @@ function createSwipeCard(user){
 
 // YES BUTTON (LIKE)
 yesBtn.addEventListener("click", async () => {
-  await api.matches.likeUser(userEmail, currentUser.email);
+  api.matches.likeUser(userEmail, currentUser.email);
   // If this user that has just been liked has ALSO liked the current user (using the app).
   console.log(currentUser);
   if (currentUser.likesList?.includes(userEmail)) {
