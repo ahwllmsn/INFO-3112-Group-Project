@@ -175,6 +175,17 @@ function createMatchCard(user, score) {
   `;
 }
 
+/* =========================
+   SWIPE BUTTON
+========================= */
+
+const findMatchesBtn = document.getElementById("findMatchesBtn");
+
+if (findMatchesBtn) {
+  findMatchesBtn.addEventListener("click", () => {
+    window.location.href = "swipe.html";
+  });
+}
 // Load data
 loadCurrentUser();
 loadMatches();
