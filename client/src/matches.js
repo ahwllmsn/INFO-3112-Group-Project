@@ -15,11 +15,18 @@ async function loadSuccessfulMatches() {
       return;
     }
 
-    const matchCards = await Promise.all(
-      matchList.map(async (match) => {
-        const user = await users.getUser(match.u2_email);
-        return createMatchCard(user, match);
-      })
+const matchCards = await Promise.all(
+  matchList.map(async (match) => {
+
+    const otherEmail =
+      match.u1_email === userEmail
+        ? match.u2_email
+        : match.u1_email;
+
+    const user = await users.getUser(otherEmail);
+
+    return createMatchCard(user, match, otherEmail);
+  })
     );
 
     matchesContainer.innerHTML = matchCards.join("");
@@ -33,7 +40,7 @@ async function loadSuccessfulMatches() {
   }
 }
 
-function createMatchCard(user, match) {
+function createMatchCard(user, match, otherEmail) {
 
   const name =
     user?.name ||
@@ -45,12 +52,11 @@ function createMatchCard(user, match) {
   const location = user?.location || "Unknown";
   const bio = user?.bio || "No bio yet";
   const photo = user?.photos;
-  const email = user?.email || "";
+  const otherUserEmail = otherEmail;
 
   // Sharing state
 const exposedBy = match.exposedBy || [];
 
-const otherUserEmail = user?.email || "";
 
 const currentUserShared = exposedBy.includes(userEmail);
 const otherUserShared = exposedBy.includes(otherUserEmail);
