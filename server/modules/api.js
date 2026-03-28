@@ -182,10 +182,14 @@ app.post('/save-new-match', async (req, res) => {
 ============================= */
 app.post('/communication-exposed', async (req, res) => {
     try {
-        let request_body = req.body;
-        let matchesArray = await markCommunicationExposed(request_body.matchData);
-        res.body = matchesArray;
-        res.sendStatus(200);
+        let { matchData, userEmail } = req.body;
+
+        let exposedBy = await markCommunicationExposed(matchData, userEmail);
+
+        res.json({
+            exposedBy
+        });
+
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
@@ -247,6 +251,24 @@ const startServer = (port) => {
     });
 
 }
+/* =============================
+   Match Status
+============================= */
+app.post('/get-match-status', async (req, res) => {
+    try {
+        let match = await retrieveMatch(req.body.matchData);
+
+        res.json({
+            exposedBy: match.exposedBy || [],
+            u1_email: match.u1_email,
+            u2_email: match.u2_email
+        });
+
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
 
 console.log("API setup is complete.")
 

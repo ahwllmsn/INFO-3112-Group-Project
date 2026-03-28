@@ -87,6 +87,18 @@ const users = {
 
 const matches = {
 
+    shareContact: async (matchData, userEmail) => {
+    let response = await fetch(serverRoute('communication-exposed'), {
+        headers,
+        method: 'POST',
+        body: JSON.stringify({ matchData, userEmail })
+    });
+
+    if (response.ok) {
+        return await response.json();
+    }
+},
+
     /* =============================
       GET MATCHES ARRAY FOR 1 USER
     ============================= */

@@ -150,24 +150,37 @@ const addMatch = async (matchData) => {
     }
 }
 
-const markCommunicationExposed = async (matchData) => {
+const markCommunicationExposed = async (matchData, userEmail) => {
     let context = undefined;
+
     try {
         context = await db.initDatabase(env.DB_URI);
 
-        const query = {"u1_email":matchData.u1_email, "u2_email":matchData.u2_email };
-        let match = await db.findDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query);
+        const query = {
+            u1_email: matchData.u1_email,
+            u2_email: matchData.u2_email
+        };
 
-        let updatedField = {"exposedCommunication":true};
-        // Add new fields to preexisting document.
-        await db.updateDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query, updatedField);
+        const match = await db.findDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query);
+
+        let exposedBy = match.exposedBy || [];
+
+        if (!exposedBy.includes(userEmail)) {
+            exposedBy.push(userEmail);
+        }
+
+        await db.updateDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query, {
+            exposedBy
+        });
+
+        return exposedBy;
+
     } catch (e) {
         console.error(e);
     } finally {
         context?.close();
     }
-        console.log(`Successfully marked the match between [${matchData.u1_email} & ${matchData.u2_email}] as profile info exchanged!`);
-}
+};
 
 const retrieveMatch = async (matchData) => {
     let match = undefined;
