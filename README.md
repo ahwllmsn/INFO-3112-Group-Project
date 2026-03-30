@@ -10,7 +10,7 @@ INFO-3112 - Section 2 - Group 5 - Vision Executors
 - Functional login and signup page with validation of proper password and correct email
 - Home page dashboard with quick action buttons and an overview of suggested matches, ordered by their calculated compatibility with the logged-in user
 - An edit profile page where the user may add or edit their bio, skills/abilities, desired skills, desired relationship type, profile photo, etc.
-- A "Find Matches" page where a user can swipe through a list of other users and click the "❤︎⁠"or "✖⁠" to indicate if they want to match with a user
+- A "Find Matches" page where a user can swipe through a list of other users and click the "❤️⁠"or "✖️⁠" to indicate if they want to match with a user
 - A "View My Matches" page where users can view their successful matches (where both accounts have swiped "Yes" on each other) and decide if they want to share their contact information with them or not
 
 ## Functional Requirements
