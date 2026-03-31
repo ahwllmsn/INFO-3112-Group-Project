@@ -59,7 +59,7 @@ editBtn.onclick = function() {
       photos: uploadedImage,
       gender: document.getElementById("gender").value,
       matchGender: document.getElementById("matchGender").value,
-      accountType: document.getElementById("membership-textbox").checked ? "Paid" : "Free"
+      accountType: document.getElementById("membership-checkbox").checked ? "Paid" : "Free"
     }
     saveChanges(profileInfo);
   }
@@ -72,6 +72,11 @@ const saveChanges = async (profileInfo) => {
     console.log("Successfully saved profile changes.");
     snackBar.textContent = "Saved changes";
     showSnackBar();
+    // If user SAVES their profile as paid, enable the sidebar match links.
+    if (profileInfo.accountType == "Paid") {
+      document.getElementById("view-matches-nav-link").hidden = false;
+      document.getElementById("find-matches-nav-link").hidden = false;
+    }
   } catch (e) {
     console.log(e);
     snackBar.textContent = "Error saving profile";
@@ -262,7 +267,7 @@ const populateProfileFields = (profileInfo) => {
   }
 
   if (profileInfo.accountType) {
-    document.getElementById("membership-textbox").checked = profileInfo.accountType == "Paid";
+    document.getElementById("membership-checkbox").checked = profileInfo.accountType == "Paid";
   }
 }
 
@@ -278,6 +283,14 @@ const showSnackBar = () => {
     snackBar.className = snackBar.className.replace("show", "");
   }, 2500)
 }
+
+// If marked membership checkbox as false (free member), then disabled accessing the match links on the sidebar.
+document.getElementById("membership-checkbox").addEventListener('change', (e) => {
+  if (!e.currentTarget.checked) {
+    document.getElementById("view-matches-nav-link").hidden = true;
+    document.getElementById("find-matches-nav-link").hidden = true;
+  }
+})
 
 
 
