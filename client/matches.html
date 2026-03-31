@@ -19,22 +19,22 @@
 <button id="menuBtn" class="menu-btn">&#9776;</button>
 </header>
 
-  <div id="overlay" class="overlay"></div>
+<div id="overlay" class="overlay"></div>
 
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-header">
-      <h2>Menu</h2>
-      <button id="closeBtn" class="close-btn">&times;</button>
-    </div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-header">
+    <h2>Menu</h2>
+    <button id="closeBtn" class="close-btn">&times;</button>
+  </div>
 
-    <nav class="sidebar-nav">
-      <a href="home.html" class="nav-link">Home</a>
-      <a href="profile.html" class="nav-link">My Profile</a>
-      <a href="swipe.html" class="nav-link">Find Matches</a>
-      <a href="matches.html" class="nav-link active">View My Matches</a>
-      <button id="logoutBtn" class="logout-btn">Logout</button>
-    </nav>
-  </aside>
+  <nav class="sidebar-nav">
+    <a href="home.html" class="nav-link">Home</a>
+    <a href="profile.html" class="nav-link">My Profile</a>
+    <a href="swipe.html" class="nav-link">Find Matches</a>
+    <a href="matches.html" class="nav-link active">View My Matches</a>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </nav>
+</aside>
 
 <main class="matches-page">
 
@@ -46,9 +46,13 @@
 
 </main>
 
+<!-- TASK 6: Contact Confirmation Message -->
+<div id="contactSnackbar" class="snackbar">
+  Contact info shared successfully!
+</div>
+
 <script type="module" src="./src/matches.js"></script>
 <script type="module" src="./src/util/sidebar.js"></script>
-
 
 </body>
 </html>

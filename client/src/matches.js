@@ -1,7 +1,6 @@
 import { users, matches } from "./util/api.js";
 
 const matchesContainer = document.getElementById("successfulMatches");
-
 const userEmail = localStorage.getItem("userEmail");
 
 async function loadSuccessfulMatches() {
@@ -15,18 +14,18 @@ async function loadSuccessfulMatches() {
       return;
     }
 
-const matchCards = await Promise.all(
-  matchList.map(async (match) => {
+    const matchCards = await Promise.all(
+      matchList.map(async (match) => {
 
-    const otherEmail =
-      match.u1_email === userEmail
-        ? match.u2_email
-        : match.u1_email;
+        const otherEmail =
+          match.u1_email === userEmail
+            ? match.u2_email
+            : match.u1_email;
 
-    const user = await users.getUser(otherEmail);
+        const user = await users.getUser(otherEmail);
 
-    return createMatchCard(user, match, otherEmail);
-  })
+        return createMatchCard(user, match, otherEmail);
+      })
     );
 
     matchesContainer.innerHTML = matchCards.join("");
@@ -54,16 +53,14 @@ function createMatchCard(user, match, otherEmail) {
   const photo = user?.photos;
   const otherUserEmail = otherEmail;
 
-  // Sharing state
-const exposedBy = match.exposedBy || [];
+  const exposedBy = match.exposedBy || [];
 
+  const currentUserShared = exposedBy.includes(userEmail);
+  const otherUserShared = exposedBy.includes(otherUserEmail);
 
-const currentUserShared = exposedBy.includes(userEmail);
-const otherUserShared = exposedBy.includes(otherUserEmail);
-
-const bothShared =
-  exposedBy.includes(userEmail) &&
-  exposedBy.includes(otherUserEmail);
+  const bothShared =
+    exposedBy.includes(userEmail) &&
+    exposedBy.includes(otherUserEmail);
 
   return `
     <div class="match-card">
@@ -83,29 +80,32 @@ const bothShared =
       <p class="bio">${bio}</p>
 
       ${
-  bothShared
-    ? `
-      <p class="email">${otherUserEmail}</p>
-      <button onclick="copyToClipboard('${otherUserEmail}')">
-        Copy Email
-      </button>
-    `
-    : currentUserShared
-    ? `
-      <p class="bio">⏳ Waiting for other user to confirm...</p>
-    `
-    : `
-      <button onclick='openConfirm(${JSON.stringify(match)})'>
-        Share Contact Info
-      </button>
-    `
-}
+        bothShared
+          ? `
+            <p class="email">${otherUserEmail}</p>
+            <button onclick="copyToClipboard('${otherUserEmail}')">
+              Copy Email
+            </button>
+          `
+          : currentUserShared
+          ? `
+            <p class="bio">⏳ Waiting for other user to confirm...</p>
+          `
+          : `
+            <button onclick='openConfirm(${JSON.stringify(match)})'>
+              Share Contact Info
+            </button>
+          `
+      }
 
     </div>
   `;
 }
 
-//Confirimg share
+/* ============================
+   CONFIRM SHARE 
+============================ */
+
 window.openConfirm = (match) => {
   const confirmShare = confirm("Do you want to share your email with this match?");
   if (confirmShare) {
@@ -125,6 +125,9 @@ window.shareContact = async (match) => {
       email
     );
 
+    // ===== TASK 6 ADDITION ONLY =====
+    showContactSnackbar();
+
     loadSuccessfulMatches();
 
   } catch (error) {
@@ -133,10 +136,24 @@ window.shareContact = async (match) => {
   }
 };
 
-//Copy to clipboard button
 window.copyToClipboard = (email) => {
   navigator.clipboard.writeText(email);
   alert("Email copied!");
 };
+
+/* ============================
+   TASK 6: SNACKBAR 
+============================ */
+
+function showContactSnackbar() {
+  const bar = document.getElementById("contactSnackbar");
+  if (!bar) return;
+
+  bar.classList.add("show");
+
+  setTimeout(() => {
+    bar.classList.remove("show");
+  }, 2500);
+}
 
 loadSuccessfulMatches();

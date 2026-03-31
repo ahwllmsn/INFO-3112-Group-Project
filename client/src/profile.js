@@ -1,11 +1,10 @@
-import * as api from "./util/api.js";
+import * as api from './util/api.js';
 
 /* ===============================
-ELEMENTS
+Editable Fields & Profile Save
 =============================== */
 
-const editBtn = document.getElementById("editBtn");
-const snackBar = document.getElementById("snackbar");
+const editBtn = document.getElementById("editBtn")
 
 const fields = [
   document.getElementById("name"),
@@ -14,130 +13,297 @@ const fields = [
   document.getElementById("location"),
   document.getElementById("bio"),
   document.getElementById("preference"),
-  document.getElementById("gender"),
-  document.getElementById("matchGender")
-];
+  document.getElementById("gender"),        
+  document.getElementById("matchGender") 
+]
+
+//Had to double this bit up to make the button work correctly
+let editing = true
+let uploadedImage = undefined;
+
+fields.forEach(f => f.disabled = !editing)
+document.getElementById("ownedSkillSelect").disabled = !editing
+document.getElementById("wantedSkillSelect").disabled = !editing
+document.getElementById("select-local-image").disabled = !editing
+editBtn.innerText = editing ? "Save" : "Edit"
+
 
 /* ===============================
-STATE
+ADDED: PROPER EDIT TOGGLE
 =============================== */
+editBtn.onclick = function() {
 
-let editing = false;
-let uploadedImage = "";
-let ownedSkills = [];
-let wantedSkills = [];
+  // TOGGLE ADDED (DO NOT REMOVE ORIGINAL LOGIC)
+  editing = !editing;
 
-/* ===============================
-EDIT MODE
-=============================== */
+  fields.forEach(f => f.disabled = !editing)
+  document.getElementById("ownedSkillSelect").disabled = !editing
+  document.getElementById("wantedSkillSelect").disabled = !editing
+  document.getElementById("select-local-image").disabled = !editing
 
-function setEditMode(state) {
-  editing = state;
+  editBtn.innerText = editing ? "Save" : "Edit"
 
-  fields.forEach((f) => (f.disabled = !editing));
+  if (editing) {
 
-  document.getElementById("ownedSkillSelect").disabled = !editing;
-  document.getElementById("wantedSkillSelect").disabled = !editing;
-  document.getElementById("select-local-image").disabled = !editing;
+    if (ownedSkills.length < 1) {
+      snackBar.textContent = "Please select at least 1 owned skill.";
+      showSnackBar();
+      return
+    }
 
-  editBtn.innerText = editing ? "Save" : "Edit";
-}
+    if (wantedSkills.length < 1) {
+      snackBar.textContent = "Please select at least 1 wanted skill.";
+      showSnackBar();
+      return
+    }
 
-setEditMode(false);
+    if (!uploadedImage) {
+      snackBar.textContent = "Please provide a profile photo." ;
+      showSnackBar();
+      return
+    }
 
-/* ===============================
-SNACKBAR
-=============================== */
+    const profileInfo = {
+      firstName: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      age: document.getElementById("age").value,
+      location: document.getElementById("location").value,
+      bio: document.getElementById("bio").value,
+      preference: document.getElementById("preference").value,
+      skillsOwned: ownedSkills,
+      skillsWanted: wantedSkills,
+      photos: uploadedImage,
+      gender: document.getElementById("gender").value,
+      matchGender: document.getElementById("matchGender").value,
+    }
 
-function showSnackBar(message) {
-  snackBar.textContent = message;
-  snackBar.className = "show";
-
-  setTimeout(() => {
-    snackBar.className = snackBar.className.replace("show", "");
-  }, 2500);
-}
-
-/* ===============================
-SAVE PROFILE
-=============================== */
-
-editBtn.onclick = async () => {
-  if (!editing) {
-    setEditMode(true);
-    return;
+    saveChanges(profileInfo);
   }
-
-  const profileInfo = {
-    firstName: document.getElementById("name").value,
-    email: document.getElementById("email").value,
-    age: document.getElementById("age").value,
-    location: document.getElementById("location").value,
-    bio: document.getElementById("bio").value,
-    preference: document.getElementById("preference").value,
-    gender: document.getElementById("gender").value,
-    matchGender: document.getElementById("matchGender").value,
-    skillsOwned,
-    skillsWanted,
-    photos: uploadedImage
-  };
-
-  await saveChanges(profileInfo);
-};
-
-/* ===============================
-SAVE FUNCTION
-=============================== */
+}
 
 const saveChanges = async (profileInfo) => {
   try {
     await api.users.editProfile(profileInfo);
 
-    // refresh matches after profile update
-    await api.matches.getMatches(profileInfo.email);
+    // ===== TASK 3 =====
+    try {
+      const email = localStorage.getItem("userEmail");
+      await api.matches.getPotentialMatchesList(email);
+      console.log("Matches recalculated successfully.");
+    } catch (e) {
+      console.log("Error recalculating matches:", e);
+    }
 
-    setEditMode(false);
-
-    showSnackBar("Profile saved & matches updated");
+    console.log("Successfully saved profile changes.");
+    snackBar.textContent = "Saved changes";
+    showSnackBar();
   } catch (e) {
-    console.error(e);
-    showSnackBar("Error saving profile");
+    console.log(e);
+    snackBar.textContent = "Error saving profile";
+    showSnackBar();
   }
-};
+}
 
 /* ===============================
-SKILLS HANDLING (REAL-TIME)
+IMAGE UPLOAD (MAX 1 PHOTO + REMOVE)
 =============================== */
 
-const ownedSelect = document.getElementById("ownedSkillSelect");
-const wantedSelect = document.getElementById("wantedSkillSelect");
+const imageInput = document.getElementById("select-local-image")
+const preview = document.getElementById("photoPreview")
 
-function addSkill(skill, list, type) {
-  if (!skill) return;
+imageInput.onchange = function(event) {
+  if (event.target.files.length > 1) {
+    snackBar.textContent = "You may only upload 1 photo.";
+    showSnackBar();
+    return;
+  }
 
-  if (list.includes(skill)) return; // prevent duplicates
+  const file = event.target.files[0];
+  if (!file) return;
 
-  const max = 5;
-  if (list.length >= max) return;
+  const reader = new FileReader();
+  reader.readAsDataURL(file)
 
-  list.push(skill);
+  reader.onload = () => {
+    uploadedImage = reader.result;
+    renderImage();
+  }
 
-  renderSkills();
+  imageInput.value = "";
 }
 
-function renderSkills() {
-  const ownedContainer = document.getElementById("ownedSkillsDisplay");
-  const wantedContainer = document.getElementById("wantedSkillsDisplay");
+function renderImage(){
+  preview.innerHTML = ""
 
-  ownedContainer.innerHTML = ownedSkills.map(s => `<span class="tag">${s}</span>`).join("");
-  wantedContainer.innerHTML = wantedSkills.map(s => `<span class="tag">${s}</span>`).join("");
+  if(!uploadedImage) return;
+  
+  const wrapper = document.createElement("div")
+  wrapper.style.position = "relative"
+  wrapper.style.display = "inline-block"
+  wrapper.style.margin = "5px"
+
+  const img = document.createElement("img")
+  img.src = uploadedImage;
+  img.style.width = "100px"
+  img.style.height = "100px"
+  img.style.objectFit = "cover"
+  img.style.borderRadius = "8px"
+
+  const removeBtn = document.createElement("button")
+  removeBtn.innerText = "✕"
+  removeBtn.style.position = "absolute"
+  removeBtn.style.top = "0"
+  removeBtn.style.right = "0"
+  removeBtn.style.background = "red"
+  removeBtn.style.color = "white"
+  removeBtn.style.border = "none"
+  removeBtn.style.cursor = "pointer"
+  removeBtn.style.borderRadius = "50%"
+
+  removeBtn.onclick = () => {
+    if(!editing) return;  
+    uploadedImage = "";
+    renderImage();
+  }
+
+  wrapper.appendChild(img)
+  wrapper.appendChild(removeBtn)
+  preview.appendChild(wrapper)
 }
 
-/* listeners */
-ownedSelect.addEventListener("change", (e) => {
-  addSkill(e.target.value, ownedSkills);
-});
+/* ===============================
+SKILL TAG SYSTEM (SAFE VERSION)
+=============================== */
 
-wantedSelect.addEventListener("change", (e) => {
-  addSkill(e.target.value, wantedSkills);
-});
+let ownedSkills = []
+let wantedSkills = []
+
+function addSkill(selectId, containerId, skillArray){
+  const select = document.getElementById(selectId)
+
+  select.onchange = function(){
+    const skill = select.value
+    if(!skill) return
+
+    if(skillArray.includes(skill)) {
+      snackBar.textContent = "Skill already selected.";
+      showSnackBar();
+      select.value = ""
+      return
+    }
+
+    if(skillArray.length >= 3){
+      snackBar.textContent = "You can only select up to 3 skills.";
+      showSnackBar();
+      select.value = ""
+      return
+    }
+
+    // SAFE ADD 
+    const updated = [...skillArray, skill]
+
+    if (containerId == "skillsOwned") {
+      ownedSkills = updated;
+    } else {
+      wantedSkills = updated;
+    }
+
+    renderSkills(containerId, updated)
+    select.value = ""
+  }
+}
+
+function renderSkills(containerId, skillArray){
+  const container = document.getElementById(containerId)
+  container.innerHTML = ""
+
+  skillArray.forEach(skill => {
+    const tag = document.createElement("div")
+    tag.className = "skill-tag"
+    tag.innerText = skill
+
+    const remove = document.createElement("span")
+    remove.innerText = " ✕"
+
+    remove.onclick = () => {
+      skillArray.splice(skillArray.indexOf(skill),1)
+      renderSkills(containerId, skillArray)
+    }
+
+    tag.appendChild(remove)
+    container.appendChild(tag)
+  })
+}
+
+addSkill("ownedSkillSelect","skillsOwned",ownedSkills)
+addSkill("wantedSkillSelect","skillsWanted",wantedSkills)
+
+/* ===============================
+PROFILE LOAD
+=============================== */
+
+const getProfileInfo = async () => {
+  let currentEmail = localStorage.getItem("userEmail");
+  let profileInfo = await api.users.getUser(currentEmail);
+  populateProfileFields(profileInfo);
+}
+
+const populateProfileFields = (profileInfo) => {
+  if(profileInfo.firstName)
+    document.getElementById("name").value = profileInfo.firstName;
+
+  if(profileInfo.email){
+    document.getElementById("email").value = profileInfo.email;
+    document.getElementById("email").disabled = true;
+  }
+
+  if(profileInfo.age){
+    document.getElementById("age").value = profileInfo.age;
+    document.getElementById("age").disabled = true;
+  }
+
+  if(profileInfo.location)
+    document.getElementById("location").value = profileInfo.location;
+
+  if(profileInfo.bio)
+    document.getElementById("bio").value = profileInfo.bio;
+
+  if(profileInfo.gender)
+    document.getElementById("gender").value = profileInfo.gender;
+
+  if(profileInfo.matchGender)
+    document.getElementById("matchGender").value = profileInfo.matchGender;
+
+  if(profileInfo.preference)
+    document.getElementById("preference").value = profileInfo.preference;
+
+  if(profileInfo.skillsOwned){
+    ownedSkills = [...profileInfo.skillsOwned];
+    renderSkills("skillsOwned", ownedSkills);
+  }
+
+  if(profileInfo.skillsWanted){
+    wantedSkills = [...profileInfo.skillsWanted];
+    renderSkills("skillsWanted", wantedSkills);
+  }
+
+  if(profileInfo.photos){
+    uploadedImage = profileInfo.photos;
+    renderImage();
+  }
+}
+
+getProfileInfo();
+
+/* ===============================
+SNACKBAR
+=============================== */
+
+const snackBar = document.getElementById("snackbar");
+
+const showSnackBar = () => {
+  snackBar.className = "show";
+  setTimeout(() => {
+    snackBar.className = snackBar.className.replace("show", "");
+  }, 2500)
+}
