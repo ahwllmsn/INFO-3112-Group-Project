@@ -58,6 +58,11 @@
   text-align: left;
 }
 
+/* Override nav items still showing if hidden. */
+[hidden] {
+  display: none !important;
+}
+
 .nav-link:hover,
 .logout-btn:hover,
 .nav-link.active {

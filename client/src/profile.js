@@ -206,6 +206,10 @@ const getProfileInfo = async () => {
   let currentEmail = localStorage.getItem("userEmail");
   let profileInfo = await api.users.getUser(currentEmail);
   populateProfileFields(profileInfo);
+  if (profileInfo.accountType == "Paid") {
+    document.getElementById("view-matches-nav-link").hidden = false;
+    document.getElementById("find-matches-nav-link").hidden = false;
+  }
 }
 
 const populateProfileFields = (profileInfo) => {

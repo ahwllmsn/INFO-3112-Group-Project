@@ -66,7 +66,6 @@ const unlockPaidFeatures = () => {
   document.getElementById("viewMatchesBtn").disabled= false;
   document.getElementById("view-matches-nav-link").hidden = false;
   document.getElementById("find-matches-nav-link").hidden = false;
-
 }
 
 /* =========================
