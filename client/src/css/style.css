@@ -600,6 +600,26 @@ object-fit: cover;
 border-radius: 10px;
 }
 
+/* ==========================
+  Membership Checkbox on profile.html
+========================== */
+#membership-div {
+  display: flex;
+  align-items: center;
+}
+
+#membership-div #paid-member-text {
+  padding:2px;
+  margin:5px;
+}
+
+#membership-textbox {
+  width: 18px;
+  height: 18px;
+  margin: 2px;
+}
+
+
 
 /* =================================================
    Snackbar on profile.html

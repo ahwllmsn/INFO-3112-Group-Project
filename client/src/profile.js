@@ -59,6 +59,7 @@ editBtn.onclick = function() {
       photos: uploadedImage,
       gender: document.getElementById("gender").value,
       matchGender: document.getElementById("matchGender").value,
+      accountType: document.getElementById("membership-textbox").checked ? "Paid" : "Free"
     }
     saveChanges(profileInfo);
   }
@@ -66,8 +67,6 @@ editBtn.onclick = function() {
 }
 
 const saveChanges = async (profileInfo) => {
-  // let result = 
-
   try {
     await api.users.editProfile(profileInfo);
     console.log("Successfully saved profile changes.");
@@ -260,6 +259,10 @@ const populateProfileFields = (profileInfo) => {
   if (profileInfo.photos) {
     uploadedImage = profileInfo.photos;
     renderImage();
+  }
+
+  if (profileInfo.accountType) {
+    document.getElementById("membership-textbox").checked = profileInfo.accountType == "Paid";
   }
 }
 
