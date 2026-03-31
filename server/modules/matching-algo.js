@@ -1,77 +1,98 @@
 import { retrieveAllUserMatchData, retrieveOneUser } from "./data.js";
 
+/* ===============================
+MAIN MATCH FUNCTION
+=============================== */
+
 const getMatchScores = async (email) => {
-    let userData = await retrieveAllUserMatchData();
-    let currentUser = await retrieveOneUser(email);
+  const allUsers = await retrieveAllUserMatchData();
+  const currentUser = await retrieveOneUser(email);
 
-    let matches = [];
+  let matches = [];
 
-    for(let u of userData) {
-        let score = calculateScore(currentUser, u);
-        if (score > 0) {
-            let match = {"u1_email":currentUser.email, "u2_email":u.email, "compatibility_score": score};
-            matches.push(match);
-        } 
+  for (let u of allUsers) {
+    const score = calculateScore(currentUser, u);
+
+    if (score > 0) {
+      const mutual = isMutualMatch(currentUser, u);
+
+      matches.push({
+        u1_email: currentUser.email,
+        u2_email: u.email,
+        compatibility_score: score,
+        mutualMatch: mutual
+      });
     }
-    // Sort array of matches in descending order (highest match score first).
-    matches.sort(compareMatchScores);
-    console.log(`Retrieved ${matches.length} potential matches for user ${email}.`);
-    return matches;
-}
+  }
 
-const compareMatchScores = (u1, u2) => {
-    if (u1.compatibility_score > u2.compatibility_score) {
-        return -1;
-    } else if (u1.compatibility_score < u2.compatibility_score) {
-        return 1;
-    }
-    return 0;
-}   
+  matches.sort(compareMatchScores);
+
+  return matches;
+};
+
+/* ===============================
+SORT
+=============================== */
+
+const compareMatchScores = (a, b) =>
+  b.compatibility_score - a.compatibility_score;
+
+/* ===============================
+SCORE LOGIC
+=============================== */
 
 const calculateScore = (u1, u2) => {
-    // Cannot match with self.
-    if (u1.email == u2.email) {
-        return -1;
-    }
-    // Incompatible if both not looking for same thing (friendship vs love).
-    else if ((u1.preference == "Friendship" && u2.preference == "Love") || (u1.preference == "Love" && u2.preference == "Friendship")) {
-        return -1;
-    }
-    // Gender incompatible - e.g. looking for female, but other user is male.
-    else if (!(genderCompatible(u1.gender, u2.matchGender) && genderCompatible(u2.gender, u1.matchGender))) {
-        return -1;
-        
-    }
-    else if (u1.skillsOwned == null || u1.skillsWanted == null || u2.skillsOwned == null || u2.skillsWanted == null) {
-        return -1;
-    }
-    let score = skillsCompatible(u1.skillsOwned, u2.skillsWanted) + skillsCompatible(u2.skillsOwned, u1.skillsWanted);
-    return score;
-}
+  if (u1.email === u2.email) return -1;
+
+  if (
+    (u1.preference === "Love" && u2.preference === "Friendship") ||
+    (u1.preference === "Friendship" && u2.preference === "Love")
+  ) return -1;
+
+  if (
+    !genderCompatible(u1.gender, u2.matchGender) ||
+    !genderCompatible(u2.gender, u1.matchGender)
+  ) return -1;
+
+  if (!u1.skillsOwned || !u1.skillsWanted || !u2.skillsOwned || !u2.skillsWanted)
+    return -1;
+
+  return (
+    skillsMatch(u1.skillsOwned, u2.skillsWanted) +
+    skillsMatch(u2.skillsOwned, u1.skillsWanted)
+  );
+};
+
+/* ===============================
+MUTUAL MATCH
+=============================== */
+
+const isMutualMatch = (u1, u2) =>
+  calculateScore(u1, u2) > 0 && calculateScore(u2, u1) > 0;
+
+/* ===============================
+GENDER CHECK
+=============================== */
 
 const genderCompatible = (gender, matchGender) => {
-    if (gender == "Female") {
-        return matchGender == "Anyone" || matchGender == "Female";
-    } else if (gender == "Male") {
-        return matchGender == "Anyone" || matchGender == "Male";
-    } else if (gender == "Other") {
-        return matchGender == "Anyone" || matchGender == "Other";
+  if (matchGender === "Anyone") return true;
+  return gender === matchGender;
+};
+
+/* ===============================
+SKILLS MATCH
+=============================== */
+
+const skillsMatch = (owned, wanted) => {
+  let score = 0;
+
+  for (let i of owned) {
+    for (let j of wanted) {
+      if (i === j) score++;
     }
-}
+  }
 
-const skillsCompatible = (owned, wanted) => {
-    let score = 0;
+  return score;
+};
 
-    for (let i = 0; i < owned.length; i++) {
-        for (let j = 0; j < wanted.length; j++) {
-            if (owned[i] == wanted[j]) {
-                score++;
-            }
-        }
-    }   
-    return score;
-}
-
-export {
-    getMatchScores
-}
+export { getMatchScores };

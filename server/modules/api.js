@@ -1,156 +1,130 @@
 import express from "express";
 import cors from "cors";
-import { addUser, retrieveOneUserLogin, retrieveOneUser,
-         updateProfileFields, addMatch, markCommunicationExposed,
-         retrieveListOfMatchesByUser, likeUser, dislikeUser } from "./data.js";
+
+import {
+    addUser,
+    retrieveOneUserLogin,
+    retrieveOneUser,
+    updateProfileFields,
+    addMatch,
+    markCommunicationExposed,
+    retrieveListOfMatchesByUser,
+    likeUser,
+    dislikeUser,
+    retrieveMatch   // ✅ FIXED (missing before)
+} from "./data.js";
+
 import { getMatchScores } from "./matching-algo.js";
 
 const app = express();
 
-// Change maximum JSON body size for express (to avoid errors in sending/receiving user photos).
-// https://stackoverflow.com/questions/71813334/how-to-change-max-size-for-body-parser-express
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({extended: true}));
-
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-
 app.use((req, _res, next) => {
-
     const timestamp = new Date(Date.now());
-
     console.warn(`\n[${timestamp.toDateString()} ${timestamp.toTimeString()}]`);
-
-    console.log(req.method, req.hostname, req.path);
+    console.log(req.method, req.path);
     console.log('body:', req.body);
-
     next();
-
 });
 
 
-/* =============================
-   LOGIN
-============================= */
-
+// =============================
+// LOGIN
+// =============================
 app.post('/login', async (req, res) => {
-
     try {
+        const { email, password } = req.body;
 
-        let request_body = req.body;
+        const user = await retrieveOneUserLogin(email);
 
-        let user_email = request_body.email;
-        let user_password = request_body.password;
+        if (!user) return res.sendStatus(401);
 
-        let user = await retrieveOneUserLogin(user_email);
-
-        if (user == null) {
-
-            res.sendStatus(401);
-
-        } 
-        else if (user.password == user_password && user.email == user_email) {
-
-            res.sendStatus(200);
-
-        } 
-        else {
-
-            res.sendStatus(401);
-
+        if (user.password === password) {
+            return res.sendStatus(200);
         }
 
-    } catch (e) {
+        return res.sendStatus(401);
 
+    } catch (e) {
         console.log(e);
         res.sendStatus(500);
-
     }
-
 });
 
 
-/* =============================
-   SIGN UP
-============================= */
-
+// =============================
+// SIGN UP
+// =============================
 app.post('/sign-up', async (req, res) => {
-
     try {
+        const { newUser } = req.body;
 
-        let request_body = req.body;
-
-        const existingUser = await retrieveOneUser(request_body.newUser.email);
+        const existingUser = await retrieveOneUser(newUser.email);
 
         if (existingUser) {
-
-            res.sendStatus(409); // duplicate email
-
-        } 
-        else {
-
-            await addUser(request_body.newUser);
-
-            res.sendStatus(200);
-
+            return res.sendStatus(409);
         }
 
+        await addUser(newUser);
+        res.sendStatus(200);
+
     } catch (e) {
-
         console.log(e);
-
         res.sendStatus(500);
-
     }
-
 });
 
 
-/* =============================
-   CREATE OR EDIT PROFILE
-============================= */
-
+// =============================
+// CREATE OR EDIT PROFILE
+// =============================
 app.post('/create-or-edit-profile', async (req, res) => {
     try {
-        let request_body = req.body;
+        const { profileInfo } = req.body;
 
-        let result = await updateProfileFields(request_body.profileInfo);
-
-        res.body = result;
+        await updateProfileFields(profileInfo);
 
         res.sendStatus(200);
+
     } catch (e) {
-
         console.log(e);
-
         res.sendStatus(500);
     }
 });
 
 
-/* =============================
-   GET PROFILE INFO
-============================= */
+// =============================
+// GET PROFILE
+// =============================
 app.post('/get-profile-data', async (req, res) => {
     try {
-        let request_body = req.body;
-        let profileInfo = await retrieveOneUser(request_body.email);
-        res.json(profileInfo);
+        const { email } = req.body;
+
+        const profile = await retrieveOneUser(email);
+
+        res.json(profile);
+
     } catch (e) {
-        console.log(e)
+        console.log(e);
         res.sendStatus(500);
     }
 });
 
 
-/* =============================
-   GET MATCHES ARRAY FOR 1 USER
-============================= */
+// =============================
+// MATCHING (6 TASK CORE)
+// =============================
 app.post('/get-potential-matches', async (req, res) => {
     try {
-        let request_body = req.body;
-        let matchesArray = await getMatchScores(request_body.email);
+        const { email } = req.body;
+
+        const matchesArray = await getMatchScores(email);
+
         res.json(matchesArray);
+
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
@@ -158,37 +132,36 @@ app.post('/get-potential-matches', async (req, res) => {
 });
 
 
-/* =============================
-   SAVE NEW MATCH
-============================= */
+// =============================
+// SAVE MATCH
+// =============================
 app.post('/save-new-match', async (req, res) => {
     try {
-        let request_body = req.body;
-        let result = await addMatch(request_body.matchData);
-        if (result == false) {
-            res.sendStatus(409); // Record already exists, did not add duplicate.
-        } else {
-            res.body = result;
-            res.sendStatus(200);
-        }
+        const { matchData } = req.body;
+
+        const result = await addMatch(matchData);
+
+        if (!result) return res.sendStatus(409);
+
+        res.sendStatus(200);
+
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
 });
 
-/* =============================
-   MARK MATCH AS COMMUNICATION EXPOSED
-============================= */
+
+// =============================
+// MUTUAL CONTACT LOGIC (IMPORTANT FOR TASK 5)
+// =============================
 app.post('/communication-exposed', async (req, res) => {
     try {
-        let { matchData, userEmail } = req.body;
+        const { matchData, userEmail } = req.body;
 
-        let exposedBy = await markCommunicationExposed(matchData, userEmail);
+        const exposedBy = await markCommunicationExposed(matchData, userEmail);
 
-        res.json({
-            exposedBy
-        });
+        res.json({ exposedBy });
 
     } catch (e) {
         console.log(e);
@@ -196,67 +169,65 @@ app.post('/communication-exposed', async (req, res) => {
     }
 });
 
-/* =============================
-   GET LIST OF ALL MATCHES FOR 1 USER
-============================= */
+
+// =============================
+// GET ALL MATCHES
+// =============================
 app.post('/find-my-matches', async (req, res) => {
     try {
-        let request_body = req.body;
-        let result = await retrieveListOfMatchesByUser(request_body.email);
+        const { email } = req.body;
+
+        const result = await retrieveListOfMatchesByUser(email);
+
         res.json(result);
+
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
 });
 
-/* =============================
-   ADD A "LIKED" USER TO A USER'S LIKED ARRAY (SWIPING YES)
-============================= */
+
+// =============================
+// LIKE / DISLIKE
+// =============================
 app.post('/send-like', async (req, res) => {
     try {
-        let request_body = req.body;
-        let result = await likeUser(request_body.userEmail, request_body.likeEmail);
+        const { userEmail, likeEmail } = req.body;
+
+        await likeUser(userEmail, likeEmail);
+
         res.sendStatus(200);
+
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
 });
 
-/* =============================
-   ADD A "DISLIKED" USER TO A USER'S LIKED ARRAY (SWIPING NO)
-============================= */
 app.post('/mark-dislike', async (req, res) => {
     try {
-        let request_body = req.body;
-        let result = await dislikeUser(request_body.userEmail, request_body.dislikeEmail);
+        const { userEmail, dislikeEmail } = req.body;
+
+        await dislikeUser(userEmail, dislikeEmail);
+
         res.sendStatus(200);
+
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
 });
 
-/* =============================
-   START SERVER
-============================= */
 
-const startServer = (port) => {
-
-    app.listen(port, () => {
-
-        console.warn(`Listening on port ${port}`);
-
-    });
-
-}
-/* =============================
-   Match Status
-============================= */
+// =============================
+// FIXED MATCH STATUS (TASK SUPPORT)
+// =============================
 app.post('/get-match-status', async (req, res) => {
     try {
-        let match = await retrieveMatch(req.body.matchData);
+        const match = await retrieveMatch(req.body.matchData);
+
+        if (!match) return res.sendStatus(404);
 
         res.json({
             exposedBy: match.exposedBy || [],
@@ -270,11 +241,14 @@ app.post('/get-match-status', async (req, res) => {
     }
 });
 
-console.log("API setup is complete.")
 
+// =============================
+const startServer = (port) => {
+    app.listen(port, () => {
+        console.log(`Listening on port ${port}`);
+    });
+};
 
-export {
+console.log("API setup complete");
 
-    startServer
-
-}
+export { startServer };

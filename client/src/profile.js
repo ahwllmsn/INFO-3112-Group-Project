@@ -1,10 +1,11 @@
-import * as api from './util/api.js';
+import * as api from "./util/api.js";
 
 /* ===============================
-PROFILE STATE
+ELEMENTS
 =============================== */
 
 const editBtn = document.getElementById("editBtn");
+const snackBar = document.getElementById("snackbar");
 
 const fields = [
   document.getElementById("name"),
@@ -17,19 +18,23 @@ const fields = [
   document.getElementById("matchGender")
 ];
 
+/* ===============================
+STATE
+=============================== */
+
 let editing = false;
 let uploadedImage = "";
 let ownedSkills = [];
 let wantedSkills = [];
 
 /* ===============================
-EDIT TOGGLE
+EDIT MODE
 =============================== */
 
 function setEditMode(state) {
   editing = state;
 
-  fields.forEach(f => f.disabled = !editing);
+  fields.forEach((f) => (f.disabled = !editing));
 
   document.getElementById("ownedSkillSelect").disabled = !editing;
   document.getElementById("wantedSkillSelect").disabled = !editing;
@@ -40,29 +45,26 @@ function setEditMode(state) {
 
 setEditMode(false);
 
-editBtn.onclick = function () {
+/* ===============================
+SNACKBAR
+=============================== */
 
+function showSnackBar(message) {
+  snackBar.textContent = message;
+  snackBar.className = "show";
+
+  setTimeout(() => {
+    snackBar.className = snackBar.className.replace("show", "");
+  }, 2500);
+}
+
+/* ===============================
+SAVE PROFILE
+=============================== */
+
+editBtn.onclick = async () => {
   if (!editing) {
     setEditMode(true);
-    return;
-  }
-
-  // VALIDATION
-  if (ownedSkills.length < 1) {
-    snackBar.textContent = "Select at least 1 owned skill.";
-    showSnackBar();
-    return;
-  }
-
-  if (wantedSkills.length < 1) {
-    snackBar.textContent = "Select at least 1 wanted skill.";
-    showSnackBar();
-    return;
-  }
-
-  if (!uploadedImage) {
-    snackBar.textContent = "Please upload a profile photo.";
-    showSnackBar();
     return;
   }
 
@@ -73,213 +75,69 @@ editBtn.onclick = function () {
     location: document.getElementById("location").value,
     bio: document.getElementById("bio").value,
     preference: document.getElementById("preference").value,
-    skillsOwned: ownedSkills,
-    skillsWanted: wantedSkills,
-    photos: uploadedImage,
     gender: document.getElementById("gender").value,
-    matchGender: document.getElementById("matchGender").value
+    matchGender: document.getElementById("matchGender").value,
+    skillsOwned,
+    skillsWanted,
+    photos: uploadedImage
   };
 
-  saveChanges(profileInfo);
+  await saveChanges(profileInfo);
 };
 
 /* ===============================
-SAVE PROFILE + MATCH UPDATE
+SAVE FUNCTION
 =============================== */
 
 const saveChanges = async (profileInfo) => {
   try {
     await api.users.editProfile(profileInfo);
 
-    // 🔥 Sprint 2: trigger match recalculation
-    if (api.matches?.getMatches) {
-      await api.matches.getMatches(profileInfo.email);
-    }
-
-    snackBar.textContent = "Profile saved & matches updated";
-    showSnackBar();
+    // refresh matches after profile update
+    await api.matches.getMatches(profileInfo.email);
 
     setEditMode(false);
 
+    showSnackBar("Profile saved & matches updated");
   } catch (e) {
     console.error(e);
-    snackBar.textContent = "Error saving profile";
-    showSnackBar();
+    showSnackBar("Error saving profile");
   }
 };
 
 /* ===============================
-IMAGE UPLOAD
+SKILLS HANDLING (REAL-TIME)
 =============================== */
 
-const imageInput = document.getElementById("select-local-image");
-const preview = document.getElementById("photoPreview");
+const ownedSelect = document.getElementById("ownedSkillSelect");
+const wantedSelect = document.getElementById("wantedSkillSelect");
 
-imageInput.onchange = function (event) {
-  const file = event.target.files[0];
-  if (!file) return;
+function addSkill(skill, list, type) {
+  if (!skill) return;
 
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
+  if (list.includes(skill)) return; // prevent duplicates
 
-  reader.onload = () => {
-    uploadedImage = reader.result;
-    renderImage();
-  };
+  const max = 5;
+  if (list.length >= max) return;
 
-  imageInput.value = "";
-};
+  list.push(skill);
 
-function renderImage() {
-  preview.innerHTML = "";
-
-  if (!uploadedImage) return;
-
-  const wrapper = document.createElement("div");
-  wrapper.style.position = "relative";
-  wrapper.style.display = "inline-block";
-
-  const img = document.createElement("img");
-  img.src = uploadedImage;
-  img.style.width = "100px";
-  img.style.height = "100px";
-  img.style.objectFit = "cover";
-  img.style.borderRadius = "8px";
-
-  const removeBtn = document.createElement("button");
-  removeBtn.innerText = "✕";
-
-  removeBtn.onclick = () => {
-    if (!editing) return;
-    uploadedImage = "";
-    renderImage();
-  };
-
-  wrapper.appendChild(img);
-  wrapper.appendChild(removeBtn);
-  preview.appendChild(wrapper);
+  renderSkills();
 }
 
-/* ===============================
-SKILLS SYSTEM
-=============================== */
+function renderSkills() {
+  const ownedContainer = document.getElementById("ownedSkillsDisplay");
+  const wantedContainer = document.getElementById("wantedSkillsDisplay");
 
-function addSkill(selectId, containerId, skillArray) {
-  const select = document.getElementById(selectId);
-
-  select.onchange = function () {
-    const skill = select.value;
-    if (!skill) return;
-
-    if (skillArray.includes(skill)) return;
-
-    if (skillArray.length >= 3) {
-      snackBar.textContent = "Max 3 skills allowed.";
-      showSnackBar();
-      select.value = "";
-      return;
-    }
-
-    skillArray.push(skill);
-
-    renderSkills(containerId, skillArray);
-
-    select.value = "";
-  };
+  ownedContainer.innerHTML = ownedSkills.map(s => `<span class="tag">${s}</span>`).join("");
+  wantedContainer.innerHTML = wantedSkills.map(s => `<span class="tag">${s}</span>`).join("");
 }
 
-function renderSkills(containerId, skillArray) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
+/* listeners */
+ownedSelect.addEventListener("change", (e) => {
+  addSkill(e.target.value, ownedSkills);
+});
 
-  skillArray.forEach(skill => {
-    const tag = document.createElement("div");
-    tag.className = "skill-tag";
-    tag.innerText = skill;
-
-    const remove = document.createElement("span");
-    remove.innerText = " ✕";
-
-    remove.onclick = () => {
-      skillArray.splice(skillArray.indexOf(skill), 1);
-      renderSkills(containerId, skillArray);
-    };
-
-    tag.appendChild(remove);
-    container.appendChild(tag);
-  });
-}
-
-addSkill("ownedSkillSelect", "skillsOwned", ownedSkills);
-addSkill("wantedSkillSelect", "skillsWanted", wantedSkills);
-
-/* ===============================
-LOAD PROFILE
-=============================== */
-
-const getProfileInfo = async () => {
-  const email = localStorage.getItem("userEmail");
-  const profileInfo = await api.users.getUser(email);
-  populateProfile(profileInfo);
-};
-
-function populateProfile(profileInfo) {
-
-  if (profileInfo.firstName)
-    document.getElementById("name").value = profileInfo.firstName;
-
-  if (profileInfo.email) {
-    document.getElementById("email").value = profileInfo.email;
-    document.getElementById("email").disabled = true;
-  }
-
-  if (profileInfo.age) {
-    document.getElementById("age").value = profileInfo.age;
-    document.getElementById("age").disabled = true;
-  }
-
-  if (profileInfo.location)
-    document.getElementById("location").value = profileInfo.location;
-
-  if (profileInfo.bio)
-    document.getElementById("bio").value = profileInfo.bio;
-
-  if (profileInfo.gender)
-    document.getElementById("gender").value = profileInfo.gender;
-
-  if (profileInfo.matchGender)
-    document.getElementById("matchGender").value = profileInfo.matchGender;
-
-  if (profileInfo.preference)
-    document.getElementById("preference").value = profileInfo.preference;
-
-  if (profileInfo.skillsOwned) {
-    ownedSkills = [...profileInfo.skillsOwned];
-    renderSkills("skillsOwned", ownedSkills);
-  }
-
-  if (profileInfo.skillsWanted) {
-    wantedSkills = [...profileInfo.skillsWanted];
-    renderSkills("skillsWanted", wantedSkills);
-  }
-
-  if (profileInfo.photos) {
-    uploadedImage = profileInfo.photos;
-    renderImage();
-  }
-}
-
-getProfileInfo();
-
-/* ===============================
-SNACKBAR
-=============================== */
-
-const snackBar = document.getElementById("snackbar");
-
-function showSnackBar() {
-  snackBar.className = "show";
-  setTimeout(() => {
-    snackBar.className = snackBar.className.replace("show", "");
-  }, 2500);
-}
+wantedSelect.addEventListener("change", (e) => {
+  addSkill(e.target.value, wantedSkills);
+});
