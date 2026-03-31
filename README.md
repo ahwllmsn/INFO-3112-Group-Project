@@ -4,7 +4,6 @@ INFO-3112 - Section 2 - Group 5 - Vision Executors
 ## Project Overview
 - **Type of Application:** Desktop website
 - **Technology Stack:** MongoDB + Express + Node
-- **Current Code Submission State:** TBD - We need to update this for the Sprint 2 Retrospective Checkpoint
 
 ### Sprint 2 Code Submission Features
 - Functional login and signup page with validation of proper password and correct email
