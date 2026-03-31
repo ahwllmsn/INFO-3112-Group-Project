@@ -9,151 +9,183 @@ const headers = {
 const serverRoute = (route) => `${API_IP}:${API_PORT}/${route}`;
 
 
-// =============================
-// USERS
-// =============================
 const users = {
 
+    /* =============================
+       LOGIN
+    ============================= */
+
     validateLogin: async (email, password) => {
-        const response = await fetch(serverRoute('login'), {
+
+        let response = await fetch(serverRoute('login'), {
+
             headers,
             method: 'POST',
             body: JSON.stringify({ email, password })
+
         });
 
         return response;
     },
 
 
-    newSignUp: async (newUser) => {
-        newUser.account_created = new Date().toISOString();
+    /* =============================
+       SIGN UP
+    ============================= */
 
-        const response = await fetch(serverRoute('sign-up'), {
+    newSignUp: async (newUser) => {
+
+        const date = new Date();
+
+        newUser.account_created = date.toISOString();
+
+        let response = await fetch(serverRoute('sign-up'), {
+
             headers,
             method: 'POST',
             body: JSON.stringify({ newUser })
+
         });
 
         return response;
     },
 
 
+    /* =============================
+       CREATE OR EDIT PROFILE
+    ============================= */
+
     editProfile: async (profileInfo) => {
-        const response = await fetch(serverRoute('create-or-edit-profile'), {
+
+        let response = await fetch(serverRoute('create-or-edit-profile'), {
             headers,
             method: 'POST',
             body: JSON.stringify({ profileInfo })
-        });
 
+        });
         return response;
     },
 
+    /* =============================
+       RETRIEVE USER DATA
+    ============================= */
 
     getUser: async (email) => {
-        const response = await fetch(serverRoute('get-profile-data'), {
+
+        let response = await fetch(serverRoute('get-profile-data'), {
             headers,
             method: 'POST',
             body: JSON.stringify({ email })
+
         });
 
-        return await response.json();
-    }
+        let data = await response.json();
+        return data;
+    },
 };
 
 
-// =============================
-// MATCHES
-// =============================
 const matches = {
 
-    // GET POTENTIAL MATCHES (CORE FEATURE #3)
-    getPotentialMatchesList: async (email) => {
-        const response = await fetch(serverRoute('get-potential-matches'), {
-            headers,
-            method: 'POST',
-            body: JSON.stringify({ email })
-        });
-
-        return await response.json();
-    },
-
-
-    // SAVE MATCH (CORE FEATURE)
-    saveNewMatch: async (matchData) => {
-        const response = await fetch(serverRoute('save-new-match'), {
-            headers,
-            method: 'POST',
-            body: JSON.stringify({ matchData })
-        });
-
-        return response;
-    },
-
-
-    // LIKE USER
-    likeUser: async (userEmail, likeEmail) => {
-        const response = await fetch(serverRoute('send-like'), {
-            headers,
-            method: 'POST',
-            body: JSON.stringify({ userEmail, likeEmail })
-        });
-
-        return response;
-    },
-
-
-    // DISLIKE USER
-    dislikeUser: async (userEmail, dislikeEmail) => {
-        const response = await fetch(serverRoute('mark-dislike'), {
-            headers,
-            method: 'POST',
-            body: JSON.stringify({ userEmail, dislikeEmail })
-        });
-
-        return response;
-    },
-
-
-    // GET ALL MATCHES
-    findMyMatches: async (email) => {
-        const response = await fetch(serverRoute('find-my-matches'), {
-            headers,
-            method: 'POST',
-            body: JSON.stringify({ email })
-        });
-
-        return await response.json();
-    },
-
-
-    // MUTUAL CONTACT FEATURE (CORE TASK #5)
     shareContact: async (matchData, userEmail) => {
-        const response = await fetch(serverRoute('communication-exposed'), {
+    let response = await fetch(serverRoute('communication-exposed'), {
+        headers,
+        method: 'POST',
+        body: JSON.stringify({ matchData, userEmail })
+    });
+
+    if (response.ok) {
+        return await response.json();
+    }
+},
+
+    /* =============================
+      GET MATCHES ARRAY FOR 1 USER
+    ============================= */
+    getPotentialMatchesList: async (email) => {
+        let response = await fetch(serverRoute('get-potential-matches'), {
             headers,
             method: 'POST',
-            body: JSON.stringify({ matchData, userEmail })
+            body: JSON.stringify({email})
         });
-
-        return await response.json();
+        let matchesArray = await response.json();
+        console.log(`Successfully retrieved ${matchesArray.length} potential match${matchesArray.length > 1 ? "es" : ""} for ${email}`);
+        return matchesArray;
     },
 
-
-    // OPTIONAL: check match status (if you use it in UI)
-    getMatchStatus: async (matchData) => {
-        const response = await fetch(serverRoute('get-match-status'), {
+    /* =============================
+      SAVE NEW MATCH
+    ============================= */    
+    saveNewMatch: async (matchData) => {
+        let response = await fetch(serverRoute('save-new-match'), {
             headers,
             method: 'POST',
-            body: JSON.stringify({ matchData })
+            body: JSON.stringify({matchData})
         });
+        if(response.ok) {
+            console.log("Saved a new match!");
+        } else {
+            console.log("Cannot add new match, it already exists in the database.");
+        }
+    },
 
-        if (!response.ok) return null;
-
-        return await response.json();
+    /* =============================
+      MARK MATCH AS COMMUNICATION EXPOSED
+    ============================= */
+    shareCommunicationInfo: async (matchData) => {
+        let response = await fetch(serverRoute('communication-exposed'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({matchData})
+        });
+        if (response.ok) {
+            console.log(`Successfully marked the match between [${matchData.u1_email} & ${matchData.u2_email}] as profile info exchanged!`);
+        }
+    },
+    /* =============================
+     GET LIST OF ALL MATCHES FOR 1 USER
+    ============================= */
+    findMyMatches: async (email) => {
+        let response = await fetch(serverRoute('find-my-matches'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({email})
+        });
+        let matchesArray = await response.json();
+        if (response.ok) {
+            console.log(`Successfully retrieved ${matchesArray.length} match${matchesArray.length > 1 ? "es" : ""} for ${email}`);
+        }
+        return matchesArray;
+    },
+    /* =============================
+     ADD A "LIKED" USER TO A USER'S LIKED ARRAY (SWIPING YES)
+    ============================= */
+    likeUser: async (userEmail, likeEmail) => {
+        let response = await fetch(serverRoute('send-like'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({userEmail, likeEmail}) 
+        });
+        if (response.ok) {
+            console.log(`${userEmail} swiped yes on ${likeEmail}!`);
+        }
+    },
+    /* =============================
+     ADD A "DISLIKED" USER TO A USER'S LIKED ARRAY (SWIPING NO)
+    ============================= */
+    dislikeUser: async (userEmail, dislikeEmail) => {
+        let response = await fetch(serverRoute('mark-dislike'), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({userEmail, dislikeEmail}) 
+        });
+        if (response.ok) {
+            console.log(`${userEmail} swiped no on ${dislikeEmail}!`);
+        }
     }
 };
 
 
-// =============================
 export {
     users,
     matches
