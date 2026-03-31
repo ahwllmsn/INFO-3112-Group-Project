@@ -10,26 +10,18 @@ const logoutBtn = document.getElementById("logoutBtn");
 // User info elements
 const userEmailText = document.getElementById("userEmail");
 const userNameText = document.getElementById("userName");
-const statusText = document.getElementById("userStatus");
+const accountType = document.getElementById("accountType");
 
 // Matches container
 const matchesGrid = document.getElementById("matchesGrid");
 
 // Get logged in user
 const userEmail = localStorage.getItem("userEmail");
+let currentUser = {};
 
 // Redirect if not logged in
 if (!userEmail) {
   window.location.href = "index.html";
-}
-
-// Status display
-if (userEmail) {
-  statusText.textContent = "● Active";
-  statusText.style.color = "#4ade80";
-} else {
-  statusText.textContent = "● Offline";
-  statusText.style.color = "#94a3b8";
 }
 
 // Logout
@@ -44,7 +36,7 @@ logoutBtn.addEventListener("click", () => {
 ========================= */
 async function loadCurrentUser() {
   try {
-    const currentUser = await users.getUser(userEmail);
+    currentUser = await users.getUser(userEmail);
 
     userEmailText.textContent = currentUser?.email || userEmail;
 
@@ -54,12 +46,27 @@ async function loadCurrentUser() {
       localStorage.getItem("userName") ||
       userEmail.split("@")[0];
 
+
+    // Display account type.
+    accountType.textContent = currentUser.accountType;
+    if (currentUser.accountType == "Paid") {
+      unlockPaidFeatures();
+    }
+
     userNameText.textContent = displayName;
   } catch (error) {
     console.error("User load error:", error);
     userEmailText.textContent = userEmail;
     userNameText.textContent = userEmail.split("@")[0];
   }
+}
+
+const unlockPaidFeatures = () => {
+  document.getElementById("findMatchesBtn").disabled= false;
+  document.getElementById("viewMatchesBtn").disabled= false;
+  document.getElementById("view-matches-nav-link").hidden = false;
+  document.getElementById("find-matches-nav-link").hidden = false;
+
 }
 
 /* =========================

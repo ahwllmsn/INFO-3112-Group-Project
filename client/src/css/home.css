@@ -143,6 +143,10 @@ body {
   opacity: 0.92;
 }
 
+.primary-btn:disabled {
+  background: linear-gradient(135deg, #788194, #5f566e);
+}
+
 /* =========================
    SECTION HEADERS
 ========================= */
