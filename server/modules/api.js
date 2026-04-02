@@ -4,6 +4,7 @@ import { addUser, retrieveOneUserLogin, retrieveOneUser,
          updateProfileFields, addMatch, markCommunicationExposed,
          retrieveListOfMatchesByUser, likeUser, dislikeUser } from "./data.js";
 import { getMatchScores } from "./matching-algo.js";
+import { getAllStatistics } from "./calculate-statistics.js";
 
 const app = express();
 
@@ -201,6 +202,20 @@ app.post('/mark-dislike', async (req, res) => {
         let request_body = req.body;
         let result = await dislikeUser(request_body.userEmail, request_body.dislikeEmail);
         res.sendStatus(200);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+
+/* =============================
+   RETRIEVE OBJECT OF DASHBOARD STATISTICS
+============================= */
+app.post('/get-app-statistics', async (req, res) => {
+    try {
+        let result = await getAllStatistics();
+        res.json(result);
     } catch (e) {
         console.log(e);
         res.sendStatus(500);

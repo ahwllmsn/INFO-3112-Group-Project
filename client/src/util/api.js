@@ -14,17 +14,12 @@ const users = {
     /* =============================
        LOGIN
     ============================= */
-
     validateLogin: async (email, password) => {
-
         let response = await fetch(serverRoute('login'), {
-
             headers,
             method: 'POST',
             body: JSON.stringify({ email, password })
-
         });
-
         return response;
     },
 
@@ -32,21 +27,14 @@ const users = {
     /* =============================
        SIGN UP
     ============================= */
-
     newSignUp: async (newUser) => {
-
         const date = new Date();
-
         newUser.account_created = date.toISOString();
-
         let response = await fetch(serverRoute('sign-up'), {
-
             headers,
             method: 'POST',
             body: JSON.stringify({ newUser })
-
         });
-
         return response;
     },
 
@@ -56,12 +44,10 @@ const users = {
     ============================= */
 
     editProfile: async (profileInfo) => {
-
         let response = await fetch(serverRoute('create-or-edit-profile'), {
             headers,
             method: 'POST',
             body: JSON.stringify({ profileInfo })
-
         });
         return response;
     },
@@ -71,14 +57,11 @@ const users = {
     ============================= */
 
     getUser: async (email) => {
-
         let response = await fetch(serverRoute('get-profile-data'), {
             headers,
             method: 'POST',
             body: JSON.stringify({ email })
-
         });
-
         let data = await response.json();
         return data;
     },
@@ -173,8 +156,21 @@ const matches = {
     }
 };
 
+const statistics = {
+    getAppStatistics: async () => {
+        let response = await fetch(serverRoute('get-app-statistics'), {
+            headers,
+            method: 'POST'
+        });
+        if (response.ok) {
+            return await response.json();
+        }
+    }
+}
+
 
 export {
     users,
-    matches
+    matches,
+    statistics
 };
