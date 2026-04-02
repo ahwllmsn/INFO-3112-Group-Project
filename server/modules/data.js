@@ -88,7 +88,7 @@ const updateProfileFields = async (profileInfo) => {
     console.log(`Successfully updated ${numFieldsChanged} fields for [${profileInfo.email}]`);
 }
 
-const retrieveAllUsers = async () => { // Has not been used yet.
+const retrieveAllUsers = async () => { 
     let users = [];
     let context = undefined;
     try {
@@ -222,6 +222,22 @@ const retrieveListOfMatchesByUser = async (email) => {
     return matches; 
 }
 
+const retrieveAllMatches = async () => {
+    let matches = [];
+    let context = undefined;
+    try {
+        context = await db.initDatabase(env.DB_URI);
+
+        matches = await db.findDocuments(context, DATABASE_NAME, MATCHES_COLLECTION, {});
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+    console.log(`Successfully retrieved all matches.`);
+    return matches; 
+}
+
 const likeUser = async (userEmail, likeEmail) => {
     let user = undefined;
     let context = undefined;
@@ -284,6 +300,7 @@ export {
     addMatch,
     markCommunicationExposed,
     retrieveListOfMatchesByUser,
+    retrieveAllMatches,
     likeUser,
     dislikeUser
 }
