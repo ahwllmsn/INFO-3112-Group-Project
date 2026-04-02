@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { addUser, retrieveOneUserLogin, retrieveOneUser,
          updateProfileFields, addMatch, markCommunicationExposed,
-         retrieveListOfMatchesByUser, likeUser, dislikeUser } from "./data.js";
+         retrieveListOfMatchesByUser, likeUser, dislikeUser, setMatchRating } from "./data.js";
 import { getMatchScores } from "./matching-algo.js";
 import { getAllStatistics } from "./calculate-statistics.js";
 
@@ -32,7 +32,6 @@ app.use((req, _res, next) => {
 /* =============================
    LOGIN
 ============================= */
-
 app.post('/login', async (req, res) => {
     try {
         let request_body = req.body;
@@ -61,7 +60,6 @@ app.post('/login', async (req, res) => {
 /* =============================
    SIGN UP
 ============================= */
-
 app.post('/sign-up', async (req, res) => {
     try {
         let request_body = req.body;
@@ -83,7 +81,6 @@ app.post('/sign-up', async (req, res) => {
 /* =============================
    CREATE OR EDIT PROFILE
 ============================= */
-
 app.post('/create-or-edit-profile', async (req, res) => {
     try {
         let request_body = req.body;
@@ -210,9 +207,24 @@ app.post('/mark-dislike', async (req, res) => {
 
 
 /* =============================
+   SET A MATCH RATING
+============================= */
+app.post('/rate-match', async (req, res) => {
+    try {
+        const { matchData, userEmail, ratingValue } = req.body;
+        await setMatchRating(matchData, userEmail, ratingValue);
+        res.sendStatus(200);   
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+
+/* =============================
    RETRIEVE OBJECT OF DASHBOARD STATISTICS
 ============================= */
-app.post('/get-app-statistics', async (req, res) => {
+app.get('/get-app-statistics', async (_req, res) => {
     try {
         let result = await getAllStatistics();
         res.json(result);
@@ -226,7 +238,6 @@ app.post('/get-app-statistics', async (req, res) => {
 /* =============================
    START SERVER
 ============================= */
-
 const startServer = (port) => {
     app.listen(port, () => {
         console.warn(`Listening on port ${port}`);

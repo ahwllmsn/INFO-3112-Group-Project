@@ -5,6 +5,11 @@ const DATABASE_NAME = "INFO-3112-Project";
 const USER_COLLECTION = "users";
 const MATCHES_COLLECTION = "matches";
 
+
+/* =============================
+   USERS COLLECTION
+============================= */
+
 const addUser = async (user) => {
     let context = undefined;
     try {
@@ -128,6 +133,10 @@ const retrieveAllUserMatchData = async () => {
     console.log(`Successfully retrieved all matching fields for all users.`);
     return users;
 }
+
+/* =============================
+   MATCHES COLLECTION
+============================= */
 
 const addMatch = async (matchData) => {
     let context = undefined;
@@ -288,6 +297,36 @@ const dislikeUser = async (userEmail, dislikeEmail) => {
     console.log(`${dislikeEmail} is now in ${userEmail}'s disliked collection.`);
 }
 
+const setMatchRating = async (matchData, userEmail, ratingValue) => {
+    let context = undefined;
+
+    try {
+        context = await db.initDatabase(env.DB_URI);
+
+        const query = {
+            u1_email: matchData.u1_email,
+            u2_email: matchData.u2_email
+        };
+
+        // const match = await db.findDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query);
+
+        let updatedFields = {};
+        // If user is U1.
+        if (userEmail == matchData.u1_email) {
+            updatedFields.u1_rating = ratingValue;
+        // If user is U2.
+        } else {
+            updatedFields.u2_rating = ratingValue;
+        }
+
+        await db.updateDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query, updatedFields);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+}
+
 export {
     DATABASE_NAME,
     USER_COLLECTION, 
@@ -302,5 +341,6 @@ export {
     retrieveListOfMatchesByUser,
     retrieveAllMatches,
     likeUser,
-    dislikeUser
+    dislikeUser,
+    setMatchRating
 }

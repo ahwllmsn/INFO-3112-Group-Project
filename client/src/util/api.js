@@ -122,11 +122,12 @@ const matches = {
             method: 'POST',
             body: JSON.stringify({email})
         });
-        let matchesArray = await response.json();
         if (response.ok) {
+            let matchesArray = await response.json();
             console.log(`Successfully retrieved ${matchesArray.length} match${matchesArray.length > 1 ? "es" : ""} for ${email}`);
+            return matchesArray;
         }
-        return matchesArray;
+        
     },
     /* =============================
      ADD A "LIKED" USER TO A USER'S LIKED ARRAY (SWIPING YES)
@@ -153,6 +154,16 @@ const matches = {
         if (response.ok) {
             console.log(`${userEmail} swiped no on ${dislikeEmail}!`);
         }
+    },
+    rateMatch: async (matchData, userEmail, ratingValue) => {
+        let response = await fetch(serverRoute("rate-match"), {
+            headers,
+            method: 'POST',
+            body: JSON.stringify({matchData, userEmail, ratingValue})
+        });
+        if (response.ok) {
+            console.log(`${userEmail} rated their match with ${userEmail == matchData.u1_email ? matchData.u2_email : matchData.u1_email} ${ratingValue}/5 stars.`)
+        }
     }
 };
 
@@ -160,7 +171,7 @@ const statistics = {
     getAppStatistics: async () => {
         let response = await fetch(serverRoute('get-app-statistics'), {
             headers,
-            method: 'POST'
+            method: 'GET'
         });
         if (response.ok) {
             return await response.json();
