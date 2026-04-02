@@ -240,8 +240,11 @@ loginForm.addEventListener('submit', async (event) => {
     localStorage.setItem("userEmail", email);
 
     setTimeout(() => {
-
-      window.location.href = "home.html";
+      if (email == "admin@lookingforlove.com") {
+       window.location.href = "dashboard.html";
+      } else {
+       window.location.href = "home.html";
+      }
 
     }, 1000);
 
