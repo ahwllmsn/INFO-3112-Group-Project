@@ -48,7 +48,12 @@ async function loadCurrentUser() {
 
 
     // Display account type.
-    accountType.textContent = currentUser.accountType;
+    if (!currentUser.accountType) {
+      accountType.textContent = "Free";
+    } else {
+      accountType.textContent = currentUser.accountType;
+    }
+    
     if (currentUser.accountType == "Paid") {
       unlockPaidFeatures();
     }

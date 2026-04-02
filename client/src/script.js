@@ -174,7 +174,7 @@ signupForm.addEventListener('submit', async (event) => {
 
   }
 
-  const newUser = { firstName, email, password };
+  const newUser = { firstName, email, password, accountType: "Free" };
 
   let signUpResult = await api.users.newSignUp(newUser);
 

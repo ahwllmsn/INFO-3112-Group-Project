@@ -105,7 +105,7 @@ const bothShared =
   `;
 }
 
-//Confirimg share
+//Confirming share
 window.openConfirm = (match) => {
   const confirmShare = confirm("Do you want to share your email with this match?");
   if (confirmShare) {
