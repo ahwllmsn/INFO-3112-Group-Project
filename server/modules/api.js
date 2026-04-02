@@ -14,7 +14,6 @@ app.use(express.urlencoded({extended: true}));
 
 app.use(cors());
 
-
 app.use((req, _res, next) => {
 
     const timestamp = new Date(Date.now());
@@ -34,9 +33,7 @@ app.use((req, _res, next) => {
 ============================= */
 
 app.post('/login', async (req, res) => {
-
     try {
-
         let request_body = req.body;
 
         let user_email = request_body.email;
@@ -45,28 +42,18 @@ app.post('/login', async (req, res) => {
         let user = await retrieveOneUserLogin(user_email);
 
         if (user == null) {
-
             res.sendStatus(401);
-
         } 
         else if (user.password == user_password && user.email == user_email) {
-
             res.sendStatus(200);
-
         } 
         else {
-
             res.sendStatus(401);
-
         }
-
     } catch (e) {
-
         console.log(e);
         res.sendStatus(500);
-
     }
-
 });
 
 
@@ -75,34 +62,20 @@ app.post('/login', async (req, res) => {
 ============================= */
 
 app.post('/sign-up', async (req, res) => {
-
     try {
-
         let request_body = req.body;
-
         const existingUser = await retrieveOneUser(request_body.newUser.email);
-
         if (existingUser) {
-
             res.sendStatus(409); // duplicate email
-
         } 
         else {
-
             await addUser(request_body.newUser);
-
             res.sendStatus(200);
-
         }
-
     } catch (e) {
-
         console.log(e);
-
         res.sendStatus(500);
-
     }
-
 });
 
 
@@ -113,16 +86,11 @@ app.post('/sign-up', async (req, res) => {
 app.post('/create-or-edit-profile', async (req, res) => {
     try {
         let request_body = req.body;
-
         let result = await updateProfileFields(request_body.profileInfo);
-
         res.body = result;
-
         res.sendStatus(200);
     } catch (e) {
-
         console.log(e);
-
         res.sendStatus(500);
     }
 });
@@ -177,24 +145,23 @@ app.post('/save-new-match', async (req, res) => {
     }
 });
 
+
 /* =============================
-   MARK MATCH AS COMMUNICATION EXPOSED
+   UPDATE COMMUNICATION EXPOSED IN MATCHES
 ============================= */
 app.post('/communication-exposed', async (req, res) => {
     try {
         let { matchData, userEmail } = req.body;
-
         let exposedBy = await markCommunicationExposed(matchData, userEmail);
-
         res.json({
             exposedBy
         });
-
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
 });
+
 
 /* =============================
    GET LIST OF ALL MATCHES FOR 1 USER
@@ -210,6 +177,7 @@ app.post('/find-my-matches', async (req, res) => {
     }
 });
 
+
 /* =============================
    ADD A "LIKED" USER TO A USER'S LIKED ARRAY (SWIPING YES)
 ============================= */
@@ -223,6 +191,7 @@ app.post('/send-like', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
 
 /* =============================
    ADD A "DISLIKED" USER TO A USER'S LIKED ARRAY (SWIPING NO)
@@ -238,43 +207,21 @@ app.post('/mark-dislike', async (req, res) => {
     }
 });
 
+
 /* =============================
    START SERVER
 ============================= */
 
 const startServer = (port) => {
-
     app.listen(port, () => {
-
         console.warn(`Listening on port ${port}`);
 
     });
 
 }
-/* =============================
-   Match Status
-============================= */
-app.post('/get-match-status', async (req, res) => {
-    try {
-        let match = await retrieveMatch(req.body.matchData);
-
-        res.json({
-            exposedBy: match.exposedBy || [],
-            u1_email: match.u1_email,
-            u2_email: match.u2_email
-        });
-
-    } catch (e) {
-        console.log(e);
-        res.sendStatus(500);
-    }
-});
 
 console.log("API setup is complete.")
 
-
 export {
-
     startServer
-
 }
