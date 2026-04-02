@@ -169,9 +169,15 @@ const markCommunicationExposed = async (matchData, userEmail) => {
             exposedBy.push(userEmail);
         }
 
-        await db.updateDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query, {
-            exposedBy
-        });
+        // Update communication exposed boolean.
+        let exposed_communication = match.exposed_communication;
+        if (exposedBy.includes(matchData.u1_email) && exposedBy.includes(matchData.u2_email)) {
+            exposed_communication = true;
+        }
+
+        let updatedFields = {exposedBy, exposed_communication};
+
+        await db.updateDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query, updatedFields);
 
         return exposedBy;
 

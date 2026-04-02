@@ -86,19 +86,6 @@ const users = {
 
 
 const matches = {
-
-    shareContact: async (matchData, userEmail) => {
-    let response = await fetch(serverRoute('communication-exposed'), {
-        headers,
-        method: 'POST',
-        body: JSON.stringify({ matchData, userEmail })
-    });
-
-    if (response.ok) {
-        return await response.json();
-    }
-},
-
     /* =============================
       GET MATCHES ARRAY FOR 1 USER
     ============================= */
@@ -130,18 +117,19 @@ const matches = {
     },
 
     /* =============================
-      MARK MATCH AS COMMUNICATION EXPOSED
+      MATCHES SHARING CONTACT INFO
     ============================= */
-    shareCommunicationInfo: async (matchData) => {
+    shareContact: async (matchData, userEmail) => {
         let response = await fetch(serverRoute('communication-exposed'), {
             headers,
             method: 'POST',
-            body: JSON.stringify({matchData})
+            body: JSON.stringify({ matchData, userEmail })
         });
         if (response.ok) {
-            console.log(`Successfully marked the match between [${matchData.u1_email} & ${matchData.u2_email}] as profile info exchanged!`);
+            return await response.json();
         }
     },
+
     /* =============================
      GET LIST OF ALL MATCHES FOR 1 USER
     ============================= */
