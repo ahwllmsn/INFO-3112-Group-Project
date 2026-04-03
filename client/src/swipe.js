@@ -19,18 +19,27 @@ async function loadSwipeMatches() {
   try {
     matchList = await api.matches.getPotentialMatchesList(userEmail);
 
-    // Buttons are disabled on default, once list loads buttons are enabled.
+    console.log("Potential Matches:", matchList);
+
     document.getElementById("yesBtn").disabled = false;
     document.getElementById("noBtn").disabled = false;
+
     showNextUser();
   } catch (error) {
     console.error("Swipe load error:", error);
   }
 }
 
-function showNextUser() {
-  if (user.dislikesList?.includes(matchList[currentIndex].u2_email) || user.likesList?.includes(matchList[currentIndex].u2_email)) {
-    advanceToNextUser();
+async function showNextUser() {
+
+  if (!matchList || matchList.length === 0) {
+    swipeContainer.innerHTML = `
+    <div class="no-matches">
+      <h2>No Matches Found</h2>
+      <p>No potential matches available right now.</p>
+    </div>
+    `;
+    return;
   }
 
   if (currentIndex >= matchList.length) {
@@ -38,7 +47,6 @@ function showNextUser() {
     swipeContainer.innerHTML = `
     <div class="no-matches">
       <h2>No More Matches</h2>
-
       <p>You’ve viewed all your potential matches.</p>
 
       <button id="backHome" class="back-home-btn">
@@ -49,21 +57,36 @@ function showNextUser() {
 
     document.getElementById("backHome").addEventListener("click", () => {
       window.location.href = "home.html";
-  });
+    });
 
-  return;
+    return;
+  }
 
-}
+  const match = matchList[currentIndex];
 
-const match = matchList[currentIndex];
-loadUser(match.u2_email);
+  if (!match) {
+    advanceToNextUser();
+    return;
+  }
 
+  const email = match.u2_email;
+
+  console.log("Showing user:", email);
+
+  await loadUser(email);
 }
 
 async function loadUser(email) {
   try {
+
+    console.log("Loading user:", email);
+
     currentUser = await api.users.getUser(email);
+
+    console.log("Loaded user:", currentUser);
+
     swipeContainer.innerHTML = createSwipeCard(currentUser);
+
   } catch (error) {
     console.error("User load error:", error);
   }
