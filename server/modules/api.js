@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { addUser, retrieveOneUserLogin, retrieveOneUser,
          updateProfileFields, addMatch, markCommunicationExposed,
-         retrieveListOfMatchesByUser, likeUser, dislikeUser, setMatchRating } from "./data.js";
+         retrieveListOfMatchesByUser, likeUser, dislikeUser, setMatchRating, addMatchFeedback } from "./data.js";
 import { getMatchScores } from "./matching-algo.js";
 import { getAllStatistics } from "./calculate-statistics.js";
 
@@ -213,6 +213,20 @@ app.post('/rate-match', async (req, res) => {
     try {
         const { matchData, userEmail, ratingValue } = req.body;
         await setMatchRating(matchData, userEmail, ratingValue);
+        res.sendStatus(200);   
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+/* =============================
+   ADD FEEDBACK EXPLANATION FOR POOR RATING
+============================= */
+app.post('/give-feedback', async (req, res) => {
+    try {
+        const { matchData, userEmail, feedbackMsg } = req.body;
+        await addMatchFeedback(matchData, userEmail, feedbackMsg);
         res.sendStatus(200);   
     } catch (e) {
         console.log(e);

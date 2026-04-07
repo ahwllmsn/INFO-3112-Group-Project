@@ -308,8 +308,6 @@ const setMatchRating = async (matchData, userEmail, ratingValue) => {
             u2_email: matchData.u2_email
         };
 
-        // const match = await db.findDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query);
-
         let updatedFields = {};
         // If user is U1.
         if (userEmail == matchData.u1_email) {
@@ -317,6 +315,34 @@ const setMatchRating = async (matchData, userEmail, ratingValue) => {
         // If user is U2.
         } else {
             updatedFields.u2_rating = ratingValue;
+        }
+
+        await db.updateDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query, updatedFields);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        context?.close();
+    }
+}
+
+const addMatchFeedback = async (matchData, userEmail, feedbackMsg) => {
+    let context = undefined;
+
+    try {
+        context = await db.initDatabase(env.DB_URI);
+
+        const query = {
+            u1_email: matchData.u1_email,
+            u2_email: matchData.u2_email
+        };
+
+        let updatedFields = {};
+        // If user is U1.
+        if (userEmail == matchData.u1_email) {
+            updatedFields.u1_feedback = feedbackMsg;
+        // If user is U2.
+        } else {
+            updatedFields.u2_feedback = feedbackMsg;
         }
 
         await db.updateDocument(context, DATABASE_NAME, MATCHES_COLLECTION, query, updatedFields);
@@ -342,5 +368,6 @@ export {
     retrieveAllMatches,
     likeUser,
     dislikeUser,
-    setMatchRating
+    setMatchRating,
+    addMatchFeedback
 }
