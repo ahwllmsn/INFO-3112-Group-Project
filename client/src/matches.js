@@ -95,22 +95,40 @@ const bothShared =
       <p class="bio">⏳ Waiting for other user to confirm...</p>
     `
     : `
-      <button onclick='openConfirm(${JSON.stringify(match)})'>
+      <button class="edit-btn" onclick='openConfirm(${JSON.stringify(match)})'>
         Share Contact Info
       </button>
     `
+    
 }
 
+<div style="text-align: right; margin-top: 10px;">
+  <button class="edit-btn" onclick="openRatingModal('${match.u1_email}', '${match.u2_email}')">
+    ⭐ Rate Match
+  </button>
+</div>
     </div>
   `;
 }
 
 //Confirming share
+let pendingMatch = null;
+
 window.openConfirm = (match) => {
-  const confirmShare = confirm("Do you want to share your email with this match?");
-  if (confirmShare) {
-    shareContact(match);
+  pendingMatch = match;
+  document.getElementById("confirmModal").style.display = "flex";
+};
+
+window.closeConfirmModal = () => {
+  document.getElementById("confirmModal").style.display = "none";
+  pendingMatch = null;
+};
+
+window.confirmShareAction = () => {
+  if (pendingMatch) {
+    shareContact(pendingMatch);
   }
+  closeConfirmModal();
 };
 
 window.shareContact = async (match) => {
@@ -137,6 +155,57 @@ window.shareContact = async (match) => {
 window.copyToClipboard = (email) => {
   navigator.clipboard.writeText(email);
   alert("Email copied!");
+};
+
+//Match Ratings
+let selectedRating = 0;
+let currentMatch = null;
+
+window.openRatingModal = (u1, u2) => {
+  currentMatch = { u1_email: u1, u2_email: u2 };
+  selectedRating = 0;
+
+  document.getElementById("ratingModal").style.display = "block";
+};
+
+window.closeRatingModal = () => {
+  document.getElementById("ratingModal").style.display = "none";
+};
+
+window.selectRating = (rating) => {
+  selectedRating = rating;
+
+  // Highlight selected stars
+  const stars = document.querySelectorAll("#starContainer span");
+  stars.forEach((star, index) => {
+    star.style.opacity = index < rating ? "1" : "0.3";
+  });
+};
+
+window.submitRating = async () => {
+  try {
+    if (!selectedRating) {
+      alert("Please select a rating");
+      return;
+    }
+
+    const userEmail = localStorage.getItem("userEmail");
+
+    await matches.rateMatch(
+      currentMatch,
+      userEmail,
+      selectedRating
+    );
+
+    closeRatingModal();
+
+    resetStars();
+
+    loadSuccessfulMatches();
+
+  } catch (error) {
+    console.error("Error submitting rating:", error);
+  }
 };
 
 loadSuccessfulMatches();

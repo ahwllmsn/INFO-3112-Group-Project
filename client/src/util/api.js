@@ -165,6 +165,7 @@ const matches = {
             console.log(`${userEmail} rated their match with ${userEmail == matchData.u1_email ? matchData.u2_email : matchData.u1_email} ${ratingValue}/5 stars.`)
         }
     }
+    
 };
 
 const statistics = {
