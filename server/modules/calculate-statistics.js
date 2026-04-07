@@ -23,6 +23,9 @@ const getAllStatistics = async () => {
         matchStatistics: {
             totalMatchCount: matches.length, // # all matches
             communicationExposedCount: getCommunicationExposedCount(), // # accounts that exposed communication w/ each other
+            starRatingCounts: getStarRatingCount(), // # of star ratings by value 1-5
+            averageStarRating: getAverageStarRating(), // average match satisfaction rating
+            averageCompatibilityScore: getAverageCompatibilityScore() // average match compatibility score
         }
     }
     return appStatistics;
@@ -120,7 +123,52 @@ const filterMatchCount = (matchField, targetValue) => {
 
 const getCommunicationExposedCount = () => {
     const communicationExposedCount = filterMatchCount("exposed_communication", true);
-    return {communicationExposedCount};
+    return communicationExposedCount;
+}
+
+
+const getStarRatingCount = () => {
+    const getCount = (value) => {
+        let counter = 0;
+        matches.forEach(m => {
+            if (m.u1_rating == value) {
+                counter++;
+            }
+            if (m.u2_rating == value) {
+                counter++;
+            }
+        });
+        return counter;
+    }
+    return {star1: getCount(1), star2: getCount(2), star3: getCount(3), star4: getCount(4), star5: getCount(5)}
+}
+
+const getAverageStarRating = () => {
+    let sum = 0;
+    let count = 0;
+    matches.forEach(m => {
+        if (m.u1_rating) {
+            sum += m.u1_rating;
+            count++;
+        }
+        if (m.u2_rating) {
+            sum += m.u2_rating;
+            count++;
+        }
+    })
+    return sum / count;
+}
+
+const getAverageCompatibilityScore = () => {
+    let sum = 0;
+    let count = 0;
+    matches.forEach(m => {
+        if (m.compatibility_score) {
+            count++;
+            sum += m.compatibility_score;
+        }
+    })
+    return sum / count;
 }
 
 export {
