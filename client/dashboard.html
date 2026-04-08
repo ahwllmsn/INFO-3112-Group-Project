@@ -1,13 +1,140 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LookingForLove Dashboard</title>
+  <link rel="icon" type="image/png" href="assets/Logo.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LookingForLove - Admin Dashboard</title>
+
+  <link rel="stylesheet" href="./src/css/sidebar.css">
+  <link rel="stylesheet" href="./src/css/dashboard.css">
 </head>
 <body>
-    <h1>User Story 6</h1>
-    <h3>As a project manager, I want to view a management dashboard displaying user statistics, so that I can understand how many users are utilizing our service.</h3>
+
+  <header class="topbar">
+    <a href="home.html" class="app-title">LookingForLove</a>
+    <button id="menuBtn" class="menu-btn">&#9776;</button>
+  </header>
+
+  <div id="overlay" class="overlay"></div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <h2>Menu</h2>
+      <button id="closeBtn" class="close-btn">&times;</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-link">Home</a>
+      <a href="profile.html" class="nav-link">Profile</a>
+      <a href="matches.html" class="nav-link">Matches</a>
+      <a href="dashboard.html" class="nav-link active">Dashboard</a>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </nav>
+  </aside>
+
+  <main class="dashboard-page">
+    <section class="hero-section">
+      <div>
+        <p class="eyebrow">Admin only</p>
+        <h1>Management Dashboard</h1>
+        <p class="hero-text">
+          View user growth, preferences, skills, matches, and satisfaction statistics in one place.
+        </p>
+      </div>
+      <div class="hero-badge">Live App Stats</div>
+    </section>
+
+    <section class="summary-grid" id="summaryGrid">
+      <div class="summary-card">
+        <span class="summary-label">Total Users</span>
+        <strong id="totalUsers">--</strong>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Total Matches</span>
+        <strong id="totalMatches">--</strong>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Communication Exposed</span>
+        <strong id="communicationExposed">--</strong>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Average Rating</span>
+        <strong id="avgRating">--</strong>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Average Compatibility</span>
+        <strong id="avgCompatibility">--</strong>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Text Summary</h2>
+        </div>
+        <div id="textSummary" class="text-summary">
+          Loading dashboard summary...
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Account Type</h2>
+        </div>
+        <div class="chart-row">
+          <div id="accountTypeChart" class="donut-chart"></div>
+          <div id="accountTypeLegend" class="legend"></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Looking For</h2>
+        </div>
+        <div class="chart-row">
+          <div id="preferenceChart" class="donut-chart"></div>
+          <div id="preferenceLegend" class="legend"></div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Gender Breakdown</h2>
+        </div>
+        <div id="genderBars" class="bar-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Age Range Histogram</h2>
+        </div>
+        <div id="ageBars" class="bar-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Star Rating Distribution</h2>
+        </div>
+        <div id="ratingBars" class="bar-list"></div>
+      </article>
+
+      <article class="panel wide-panel">
+        <div class="panel-header">
+          <h2>Most Popular Owned Skills</h2>
+        </div>
+        <div id="ownedSkillsTable"></div>
+      </article>
+
+      <article class="panel wide-panel">
+        <div class="panel-header">
+          <h2>Most Wanted Skills</h2>
+        </div>
+        <div id="wantedSkillsTable"></div>
+      </article>
+    </section>
+  </main>
+
+  <script type="module" src="./src/dashboard.js"></script>
 </body>
-<script type="module" src="./src/dashboard.js"></script>
 </html>
