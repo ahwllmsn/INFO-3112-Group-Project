@@ -12,7 +12,7 @@
 <body>
 
   <header class="topbar">
-    <a href="home.html" class="app-title">LookingForLove</a>
+    <a class="app-title">LookingForLove</a>
     <button id="menuBtn" class="menu-btn">&#9776;</button>
   </header>
 
@@ -25,9 +25,6 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a href="home.html" class="nav-link">Home</a>
-      <a href="profile.html" class="nav-link">Profile</a>
-      <a href="matches.html" class="nav-link">Matches</a>
       <a href="dashboard.html" class="nav-link active">Dashboard</a>
       <button id="logoutBtn" class="logout-btn">Logout</button>
     </nav>
@@ -60,11 +57,17 @@
       </div>
       <div class="summary-card">
         <span class="summary-label">Average Rating</span>
-        <strong id="avgRating">--</strong>
+        <p>
+          <strong id="avgRating">--</strong>
+          / 5
+      </p>
       </div>
       <div class="summary-card">
         <span class="summary-label">Average Compatibility</span>
-        <strong id="avgCompatibility">--</strong>
+        <p>
+          <strong id="avgCompatibility">--</strong>
+          / 5
+        </p>
       </div>
     </section>
 
@@ -90,7 +93,7 @@
 
       <article class="panel">
         <div class="panel-header">
-          <h2>Looking For</h2>
+          <h2>Relationship Type Preferences</h2>
         </div>
         <div class="chart-row">
           <div id="preferenceChart" class="donut-chart"></div>
@@ -107,7 +110,7 @@
 
       <article class="panel">
         <div class="panel-header">
-          <h2>Age Range Histogram</h2>
+          <h2>Age Ranges Distribution</h2>
         </div>
         <div id="ageBars" class="bar-list"></div>
       </article>
@@ -121,14 +124,14 @@
 
       <article class="panel wide-panel">
         <div class="panel-header">
-          <h2>Most Popular Owned Skills</h2>
+          <h2>Most Popular Possessed Skills</h2>
         </div>
         <div id="ownedSkillsTable"></div>
       </article>
 
       <article class="panel wide-panel">
         <div class="panel-header">
-          <h2>Most Wanted Skills</h2>
+          <h2>Most Popular Desired Skills</h2>
         </div>
         <div id="wantedSkillsTable"></div>
       </article>

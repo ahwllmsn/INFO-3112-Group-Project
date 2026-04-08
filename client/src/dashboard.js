@@ -61,6 +61,9 @@ async function loadDashboard() {
     const userStats = data.userStatistics || {};
     const matchStats = data.matchStatistics || {};
 
+    // Convert average compatibility score X/6 -> X/5.
+    matchStats.averageCompatibilityScore = convertCompatibility6to5(matchStats.averageCompatibilityScore);
+
     renderSummaryCards(userStats, matchStats);
     renderTextSummary(userStats, matchStats);
     renderDonutChart(
@@ -133,6 +136,12 @@ async function loadDashboard() {
   }
 }
 
+// Since compatibility score is X/6, and match rating is X/5,
+// we should convert compatibility score to be out of 5 so we can accurately compare these numbers.
+const convertCompatibility6to5 = (compatibility_score) => {
+  return (compatibility_score / 6) * 5;
+}
+
 /* =========================
    SUMMARY
 ========================= */
@@ -174,7 +183,7 @@ function renderTextSummary(userStats, matchStats) {
     <p>
       Users have exposed communication in <strong>${matchStats.communicationExposedCount ?? 0}</strong> matches.
       Average rating is <strong>${formatNumber(matchStats.averageStarRating)}</strong>/5, and
-      average compatibility is <strong>${formatNumber(matchStats.averageCompatibilityScore)}</strong>.
+      average compatibility is <strong>${formatNumber(matchStats.averageCompatibilityScore)}</strong>/5.
     </p>
   `;
 }
