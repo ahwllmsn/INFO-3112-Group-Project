@@ -165,7 +165,7 @@ window.openRatingModal = (u1, u2) => {
   currentMatch = { u1_email: u1, u2_email: u2 };
   selectedRating = 0;
 
-  document.getElementById("ratingModal").style.display = "block";
+  document.getElementById("ratingModal").style.display = "flexS";
 };
 
 window.closeRatingModal = () => {
@@ -190,16 +190,22 @@ window.submitRating = async () => {
     }
 
     const userEmail = localStorage.getItem("userEmail");
+    const feedbackMsg = document.getElementById("feedbackInput").value;
 
-    await matches.rateMatch(
-      currentMatch,
-      userEmail,
-      selectedRating
-    );
+    // Submit rating
+    await matches.rateMatch(currentMatch, userEmail, selectedRating);
+
+    // Submit feedback (only if exists)
+    if (feedbackMsg && feedbackMsg.trim() !== "") {
+      await matches.matchFeedback(
+        currentMatch,
+        userEmail,
+        feedbackMsg
+      );
+    }
 
     closeRatingModal();
-
-    resetStars();
+    document.getElementById("feedbackInput").value = "";
 
     loadSuccessfulMatches();
 
