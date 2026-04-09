@@ -165,7 +165,7 @@ window.openRatingModal = (u1, u2) => {
   currentMatch = { u1_email: u1, u2_email: u2 };
   selectedRating = 0;
 
-  document.getElementById("ratingModal").style.display = "flexS";
+  document.getElementById("ratingModal").style.display = "flex";
 };
 
 window.closeRatingModal = () => {
