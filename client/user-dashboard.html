@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LookingForLove - Dashboard</title>
+
+<link rel="icon" type="image/png" href="assets/Logo.png">
+
+<link rel="stylesheet" href="./src/css/home.css" />
+<link rel="stylesheet" href="./src/css/sidebar.css" />
+<link rel="stylesheet" href="./src/css/user-dashboard.css" />
+
+</head>
+
+<body>
+
+<header class="topbar">
+<a href="home.html" class="app-title">LookingForLove</a>
+<button id="menuBtn" class="menu-btn">&#9776;</button>
+</header>
+
+<div id="overlay" class="overlay"></div>
+
+<aside id="sidebar" class="sidebar">
+<div class="sidebar-header">
+<h2>Menu</h2>
+<button id="closeBtn" class="close-btn">&times;</button>
+</div>
+
+<nav class="sidebar-nav">
+<a href="home.html" class="nav-link">Home</a>
+<a href="profile.html" class="nav-link">My Profile</a>
+<a href="swipe.html" class="nav-link">Find Matches</a>
+<a href="matches.html" class="nav-link">View My Matches</a>
+<a href="user-dashboard.html" class="nav-link active">Users Dashboard</a>
+<button id="logoutBtn" class="logout-btn">Logout</button>
+</nav>
+
+</aside>
+
+<main class="dashboard-page">
+
+<section class="dashboard-header">
+<h1>Dashboard 📊</h1>
+</section>
+
+<section class="stats-container">
+
+<div class="stat-card">
+<div class="stat-icon">👤</div>
+<div class="stat-info">
+<h3>Total Users</h3>
+<p id="totalUsers">0</p>
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-icon">❤️</div>
+<div class="stat-info">
+<h3>Total Matches</h3>
+<p id="totalMatches">0</p>
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-icon">⭐</div>
+<div class="stat-info">
+<h3>Average Rating</h3>
+<p id="averageRating">0</p>
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-icon">💬</div>
+<div class="stat-info">
+<h3>Contact Shared</h3>
+<p id="contactShared">0</p>
+</div>
+</div>
+
+<div class="stat-card">
+<div class="stat-icon">🎯</div>
+<div class="stat-info">
+<h3>Compatibility Score</h3>
+<p id="compatibility">0</p>
+</div>
+</div>
+
+</section>
+
+</main>
+
+<script type="module" src="./src/user-dashboard.js"></script>
+<script type="module" src="./src/util/sidebar.js"></script>
+
+</body>
+</html>
