@@ -85,8 +85,17 @@ app.post('/create-or-edit-profile', async (req, res) => {
     try {
         let request_body = req.body;
         let result = await updateProfileFields(request_body.profileInfo);
-        res.body = result;
-        res.sendStatus(200);
+
+//  NEW: recalculate matches after profile update (Sprint -2)
+try {
+    const email = request_body.profileInfo.email;
+    await getMatchScores(email);
+    console.log(`Matches recalculated for ${email}`);
+} catch (err) {
+    console.log("Match recalculation failed:", err);
+}
+
+return res.sendStatus(200);
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
