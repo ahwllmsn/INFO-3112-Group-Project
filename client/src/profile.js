@@ -1,4 +1,5 @@
 import * as api from './util/api.js';
+import { showSnackBar, snackBar } from './util/snackbar.js';
 
 /* ===============================
 Editable Fields & Profile Save
@@ -272,17 +273,6 @@ const populateProfileFields = (profileInfo) => {
 }
 
 getProfileInfo();
-
-// Snackbar
-// https://www.w3schools.com/howto/howto_js_snackbar.asp
-const snackBar = document.getElementById("snackbar");
-
-const showSnackBar = () => {
-  snackBar.className = "show";
-  setTimeout(() => {
-    snackBar.className = snackBar.className.replace("show", "");
-  }, 2500)
-}
 
 // If marked membership checkbox as false (free member), then disabled accessing the match links on the sidebar.
 document.getElementById("membership-checkbox").addEventListener('change', (e) => {

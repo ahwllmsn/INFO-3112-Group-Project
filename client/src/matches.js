@@ -1,4 +1,5 @@
 import { users, matches } from "./util/api.js";
+import { showSnackBar, snackBar } from './util/snackbar.js';
 
 const matchesContainer = document.getElementById("successfulMatches");
 
@@ -86,7 +87,7 @@ const bothShared =
   bothShared
     ? `
       <p class="email">${otherUserEmail}</p>
-      <button onclick="copyToClipboard('${otherUserEmail}')">
+      <button class="edit-btn" onclick="copyToClipboard('${otherUserEmail}')">
         Copy Email
       </button>
     `
@@ -154,7 +155,8 @@ window.shareContact = async (match) => {
 //Copy to clipboard button
 window.copyToClipboard = (email) => {
   navigator.clipboard.writeText(email);
-  alert("Email copied!");
+  snackBar.textContent = "Email copied to clipboard!";
+  showSnackBar();
 };
 
 //Match Ratings
@@ -185,7 +187,8 @@ window.selectRating = (rating) => {
 window.submitRating = async () => {
   try {
     if (!selectedRating) {
-      alert("Please select a rating");
+      snackBar.textContent = "Please select a rating!"
+      showSnackBar();
       return;
     }
 
