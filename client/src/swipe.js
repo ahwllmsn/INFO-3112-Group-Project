@@ -24,6 +24,7 @@ async function loadSwipeMatches() {
     document.getElementById("yesBtn").disabled = false;
     document.getElementById("noBtn").disabled = false;
 
+    document.getElementById("loading-gif").style.display = "none";
     showNextUser();
   } catch (error) {
     console.error("Swipe load error:", error);
