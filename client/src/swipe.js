@@ -31,8 +31,7 @@ async function loadSwipeMatches() {
 }
 
 async function showNextUser() {
-
-  if (!matchList || matchList.length === 0) {
+  if (!matchList || matchList.length == 0) {
     swipeContainer.innerHTML = `
     <div class="no-matches">
       <h2>No Matches Found</h2>
@@ -42,7 +41,7 @@ async function showNextUser() {
     return;
   }
 
-  if (currentIndex >= matchList.length) {
+  if (currentIndex > matchList.length) {
 
     swipeContainer.innerHTML = `
     <div class="no-matches">
@@ -69,6 +68,10 @@ async function showNextUser() {
     return;
   }
 
+  if (user.dislikesList?.includes(match.u2_email) || user.likesList?.includes(match.u2_email)) {
+    advanceToNextUser();
+  } 
+
   const email = match.u2_email;
 
   console.log("Showing user:", email);
@@ -78,7 +81,6 @@ async function showNextUser() {
 
 async function loadUser(email) {
   try {
-
     console.log("Loading user:", email);
 
     currentUser = await api.users.getUser(email);

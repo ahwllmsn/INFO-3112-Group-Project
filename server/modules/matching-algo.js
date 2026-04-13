@@ -8,10 +8,12 @@ const getMatchScores = async (email) => {
 
     for(let u of userData) {
         let score = calculateScore(currentUser, u);
-        if (score > 0) {
-            let match = {"u1_email":currentUser.email, "u2_email":u.email, "compatibility_score": score};
-            matches.push(match);
-        } 
+        if (!currentUser.likesList?.includes(u.email) && !currentUser.dislikesList?.includes(u.email)) {
+            if (score > 0) {
+                let match = {"u1_email":currentUser.email, "u2_email":u.email, "compatibility_score": score};
+                matches.push(match);
+            } 
+        }
     }
     // Sort array of matches in descending order (highest match score first).
     matches.sort(compareMatchScores);
