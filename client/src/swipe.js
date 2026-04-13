@@ -32,6 +32,7 @@ async function loadSwipeMatches() {
 
 async function showNextUser() {
   if (!matchList || matchList.length == 0) {
+    showYesNoButtons(false);
     swipeContainer.innerHTML = `
     <div class="no-matches">
       <h2>No Matches Found</h2>
@@ -42,7 +43,7 @@ async function showNextUser() {
   }
 
   if (currentIndex > matchList.length) {
-
+    showYesNoButtons(false);
     swipeContainer.innerHTML = `
     <div class="no-matches">
       <h2>No More Matches</h2>
@@ -86,7 +87,7 @@ async function loadUser(email) {
     currentUser = await api.users.getUser(email);
 
     console.log("Loaded user:", currentUser);
-
+    showYesNoButtons(true);
     swipeContainer.innerHTML = createSwipeCard(currentUser);
 
   } catch (error) {
@@ -162,9 +163,20 @@ continueSwipe.addEventListener("click", () => {
   advanceToNextUser();
 });
 
-loadSwipeMatches();
-
 const advanceToNextUser = () => {
   currentIndex++;
   showNextUser();
 }
+
+// Only show heart and X buttons when a valid match card is shown on screen.
+const showYesNoButtons = (show) => {
+  if (show) {
+    document.getElementById("yesBtn").style.display = "block";
+    document.getElementById("noBtn").style.display = "block";
+  } else {
+    document.getElementById("yesBtn").style.display = "none";
+    document.getElementById("noBtn").style.display = "none";
+  }
+}
+
+loadSwipeMatches();
