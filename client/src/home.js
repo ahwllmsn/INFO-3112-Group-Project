@@ -82,9 +82,9 @@ async function loadMatches() {
 
   try {
     const matchList = await matches.getPotentialMatchesList(userEmail);
-    document.getElementById("loading-gif-alt").style.display = "none";
 
     if (!Array.isArray(matchList) || matchList.length === 0) {
+      document.getElementById("loading-gif-alt").style.display = "none";
       matchesGrid.style = "display:flex; justify-content:space-between; align-items:center;"
       matchesGrid.innerHTML = `<p class="loading-text">No users found.<br>
         Select <strong style="line-height: 1.8;">
@@ -106,8 +106,11 @@ async function loadMatches() {
       })
     );
 
+    document.getElementById("loading-gif-alt").style.display = "none";
+
     matchesGrid.innerHTML = matchCards.join("");
   } catch (error) {
+    document.getElementById("loading-gif-alt").style.display = "none";
     console.error("Matches error:", error);
     matchesGrid.innerHTML = `<p class="loading-text">Error loading matches.</p>`;
   }
