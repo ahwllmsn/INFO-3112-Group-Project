@@ -121,23 +121,21 @@ function createSwipeCard(user, match) {
 
         <div>
             <h2>${name}</h2 >
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <p>${user?.gender || ""}, ${age}</p>
-              <p class="compatibility">Compatibility: ${matchScoreWord(match.compatibility_score)}</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+              <p class="role">${user?.gender || ""}, ${age}</p>
+              <p class="role">Compatibility: ${matchScoreWord(match.compatibility_score)}</p>
           </div>
         </div>
     
-      <hr style=" margin-bottom:5px; background:#93c5fd; border-radius:2px; height:2px; border:2px;" >
       <p class="bio"><strong>Bio:</strong> ${bio}</p>
       <p class="location"><strong>Location:</strong> ${location}</p>
       <p class="looking-for"><strong>Looking For:</strong> ${user?.preference || ""}</p>
 
-      <hr style=" margin-bottom:5px; background:#93c5fd; border-radius:2px; height:2px; border:2px;" >
       <div class="tags">
-      <p style="margin-top:10px; padding-bottom:0px;"><strong>Skills:</strong></p>
+      <p style="margin-top:5px; padding-bottom:0px;"><strong>Skills:</strong></p>
         ${
           skills.length
-            ? skills.map(s => `<span>${s}</span>`).join("")
+            ? skills.map(s => `<span style="margin-top:0px;">${s}</span>`).join("")
             : `<span>No skills</span>`
         }
       </div>
