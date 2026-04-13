@@ -77,13 +77,18 @@ const unlockPaidFeatures = () => {
    LOAD MATCHES
 ========================= */
 async function loadMatches() {
-  matchesGrid.innerHTML = `<p class="loading-text">Loading matches...</p>`;
+  matchesGrid.innerHTML = `<p class="loading-text">Loading potential new connections...</p>`;
 
   try {
     const matchList = await matches.getPotentialMatchesList(userEmail);
+    document.getElementById("loading-gif-alt").style.display = "none";
 
     if (!Array.isArray(matchList) || matchList.length === 0) {
-      matchesGrid.innerHTML = `<p class="loading-text">No matches found.</p>`;
+      matchesGrid.style = "display:flex; justify-content:space-between; align-items:center;"
+      matchesGrid.innerHTML = `<p class="loading-text">No users found.<br>
+        Select <strong style="line-height: 1.8;">
+          <a id="matches-hyperlink" href="matches.html">View My Matches</a>
+      </strong> to view your successful matches.</p>`;
       return;
     }
 

@@ -6,3 +6,12 @@ height: 50vh;
 background: url('/assets/loading-gif.gif') no-repeat center center;
 z-index: 9999;
 }
+
+#loading-gif-alt {
+position: absolute;
+right:45%;
+width: 10%;
+height: 10%;
+background: url('/assets/loading-gif.gif') no-repeat center center;
+z-index: 9999;
+}
