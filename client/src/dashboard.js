@@ -130,6 +130,8 @@ async function loadDashboard() {
       "Users Wanting Skill"
     );
 
+    document.getElementById("heading-status-text").innerHTML = "Live App Stats";
+
   } catch (error) {
     console.error("Dashboard error:", error);
     showError();
