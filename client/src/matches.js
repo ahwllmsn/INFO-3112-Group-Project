@@ -42,6 +42,10 @@ const matchCards = await Promise.all(
 }
 
 function createMatchCard(user, match, otherEmail) {
+  let alreadyRated = false;
+  if ((match.u1_email == user.email && match.u1_rating != null) || (match.u2_email == user.email && match.u2_rating != null)) {
+    alreadyRated = true;
+  }
 
   const name =
     user?.name ||
@@ -104,9 +108,13 @@ const bothShared =
 }
 
 <div style="text-align: right; margin-top: 10px;">
-  <button class="edit-btn" onclick="openRatingModal('${match.u1_email}', '${match.u2_email}')">
-    ⭐ Rate Match
-  </button>
+  ${alreadyRated ?
+    `<p><strong>Your Rating:</strong> ${userEmail == match.u1_email ? match.u1_rating : match.u2_rating}/5 </p>`
+    :
+    `<button class="edit-btn" onclick="openRatingModal('${match.u1_email}', '${match.u2_email}')">
+      ⭐ Rate Match
+    </button>`
+  }
 </div>
     </div>
   `;
@@ -206,6 +214,9 @@ window.submitRating = async () => {
         feedbackMsg
       );
     }
+
+    snackBar.textContent = "Match rating saved";
+    showSnackBar();
 
     closeRatingModal();
     document.getElementById("feedbackInput").value = "";
