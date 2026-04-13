@@ -510,3 +510,7 @@ color:white;
 #matches-hyperlink:visited, #matches-hyperlink{
   color: #4B9EFA;
 }
+
+#matches-hyperlink:hover {
+  color: #4A52EC;
+}

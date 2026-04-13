@@ -1,4 +1,5 @@
 import * as api from './util/api.js';
+import {matchScoreWord} from "./util/match-score-conversion.js";
 
 const swipeContainer = document.getElementById("swipeContainer");
 const yesBtn = document.getElementById("yesBtn");
@@ -78,10 +79,10 @@ async function showNextUser() {
 
   console.log("Showing user:", email);
 
-  await loadUser(email);
+  await loadUser(email, match);
 }
 
-async function loadUser(email) {
+async function loadUser(email, match) {
   try {
     console.log("Loading user:", email);
 
@@ -89,43 +90,60 @@ async function loadUser(email) {
 
     console.log("Loaded user:", currentUser);
     showYesNoButtons(true);
-    swipeContainer.innerHTML = createSwipeCard(currentUser);
+    swipeContainer.innerHTML = createSwipeCard(currentUser, match);
 
   } catch (error) {
     console.error("User load error:", error);
   }
 }
 
-function createSwipeCard(user){
+function createSwipeCard(user, match) {
 
   const name =
     user?.name ||
     user?.firstName ||
     user?.email?.split("@")[0] ||
-    "Developer";
-
+    "Unknown";
   const age = user?.age || "N/A";
   const bio = user?.bio || "No bio yet";
-  const location = user?.location || "Unknown";
+  const location = user?.location || "Not specified";
   const photo = user?.photos;
 
+  const skills = Array.isArray(user?.skillsOwned) ? user.skillsOwned.slice(0, 3) : [];
+
   return `
-    <div class="swipe-card">
+    <div class="match-card">
 
       ${photo 
       ? `<img src="${photo}" class="swipe-photo"/>`
       : `<div class="no-photo">No Photo</div>`
       }
 
-      <h2>${name}</h2>
+        <div>
+            <h2>${name}</h2 >
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <p>${user?.gender || ""}, ${age}</p>
+              <p class="compatibility">Compatibility: ${matchScoreWord(match.compatibility_score)}</p>
+          </div>
+        </div>
+    
+      <hr style=" margin-bottom:5px; background:#93c5fd; border-radius:2px; height:2px; border:2px;" >
+      <p class="bio"><strong>Bio:</strong> ${bio}</p>
+      <p class="location"><strong>Location:</strong> ${location}</p>
+      <p class="looking-for"><strong>Looking For:</strong> ${user?.preference || ""}</p>
 
-      <p class="age">${age}</p>
+      <hr style=" margin-bottom:5px; background:#93c5fd; border-radius:2px; height:2px; border:2px;" >
+      <div class="tags">
+      <p style="margin-top:10px; padding-bottom:0px;"><strong>Skills:</strong></p>
+        ${
+          skills.length
+            ? skills.map(s => `<span>${s}</span>`).join("")
+            : `<span>No skills</span>`
+        }
+      </div>
 
-      <p class="location">${location}</p>
-
-      <p class="bio">${bio}</p>
-
-    </div>`;
+    </div>
+  `;
 }
 
 // YES BUTTON (LIKE)

@@ -1,4 +1,5 @@
 import { users, matches } from "./util/api.js";
+import {matchScoreWord} from "./util/match-score-conversion.js";
 
 // Sidebar elements
 const menuBtn = document.getElementById("menuBtn");
@@ -112,26 +113,6 @@ async function loadMatches() {
   }
 }
 
-/* =========================
-   CREATE MATCH CARD
-========================= */
-const matchScoreWord = (score) => {
-  switch (score) {
-    case 6:
-      return "Excellent";
-    case 5:
-      return "Strong";
-    case 4:
-      return "Great";
-    case 3: 
-      return "Good";
-    case 2:
-      return "Okay";
-    default:
-    return "Fair";
-  }
-}
-
 function createMatchCard(user, score) {
   const name = user?.name || user?.firstName || "Unknown";
   const age = user?.age || "N/A";
@@ -177,7 +158,7 @@ function createMatchCard(user, score) {
 }
 
 /* =========================
-   SWIPE BUTTON
+   FIND MATCHES BUTTON
 ========================= */
 
 const findMatchesBtn = document.getElementById("findMatchesBtn");
