@@ -62,6 +62,7 @@ editBtn.onclick = function() {
       matchGender: document.getElementById("matchGender").value,
       accountType: document.getElementById("membership-checkbox").checked ? "Paid" : "Free"
     }
+    document.getElementById("status-text").innerHTML = "Saving changes...";
     saveChanges(profileInfo);
   }
   editBtn.innerText = editing ? "Save" : "Edit"
@@ -72,6 +73,7 @@ const saveChanges = async (profileInfo) => {
     await api.users.editProfile(profileInfo);
     console.log("Successfully saved profile changes.");
     snackBar.textContent = "Saved changes";
+      document.getElementById("status-text").innerHTML = "";
     showSnackBar();
     // If user SAVES their profile as paid, enable the sidebar match links.
     if (profileInfo.accountType == "Paid") {
@@ -270,6 +272,7 @@ const populateProfileFields = (profileInfo) => {
   if (profileInfo.accountType) {
     document.getElementById("membership-checkbox").checked = profileInfo.accountType == "Paid";
   }
+  document.getElementById("status-text").innerHTML = "";
 }
 
 getProfileInfo();
